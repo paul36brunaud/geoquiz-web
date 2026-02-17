@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>GeoTest</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+  <div class="container">
+    <h1>🌍 Test de Géographie</h1>
+    
+    <div id="quiz">
+      <h2 id="question">Question ici</h2>
+      <div id="answers"></div>
+      <button id="nextBtn" disabled>Question suivante</button>
+    </div>
+
+    <div id="result" class="hidden">
+      <h2>Résultat</h2>
+      <p id="score"></p>
+      <button onclick="location.reload()">Recommencer</button>
+    </div>
+  </div>
+
+<script>
+const questions = [
+  {
+    question: "Quelle est la capitale de la France ?",
+    answers: ["Paris", "Lyon", "Marseille", "Toulouse"],
+    correct: 0
+  },
+  {
+    question: "Quel est le plus grand océan ?",
+    answers: ["Atlantique", "Indien", "Pacifique", "Arctique"],
+    correct: 2
+  },
+  {
+    question: "Quel pays a la plus grande population ?",
+    answers: ["USA", "Inde", "Chine", "Brésil"],
+    correct: 1
+  }
+];
+
+let currentQuestion = 0;
+let score = 0;
+
+const questionEl = document.getElementById("question");
+const answersEl = document.getElementById("answers");
+const nextBtn = document.getElementById("nextBtn");
+const resultEl = document.getElementById("result");
+const scoreEl = document.getElementById("score");
+
+function showQuestion() {
+  nextBtn.disabled = true;
+  const q = questions[currentQuestion];
+  questionEl.textContent = q.question;
+  answersEl.innerHTML = "";
+
+  q.answers.forEach((answer, index) => {
+    const button = document.createElement("button");
+    button.textContent = answer;
+    button.classList.add("answer-btn");
+    button.onclick = () => selectAnswer(index);
+    answersEl.appendChild(button);
+  });
+}
+
+function selectAnswer(index) {
+  const buttons = document.querySelectorAll(".answer-btn");
+  buttons.forEach(btn => btn.disabled = true);
+
+  if (index === questions[currentQuestion].correct) {
+    score++;
+    buttons[index].classList.add("correct");
+  } else {
+    buttons[index].classList.add("wrong");
+    buttons[questions[currentQuestion].correct].classList.add("correct");
+  }
+
+  nextBtn.disabled = false;
+}
+
+nextBtn.addEventListener("click", () => {
+  currentQuestion++;
+  if (currentQuestion < questions.length) {
+    showQuestion();
+  } else {
+    document.getElementById("quiz").classList.add("hidden");
+    resultEl.classList.remove("hidden");
+    scoreEl.textContent = `Tu as obtenu ${score} / ${questions.length}`;
+  }
+});
+
+showQuestion();
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js');
+}
+</script>
+
+</body>
+</html>
