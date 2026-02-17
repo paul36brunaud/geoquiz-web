@@ -1,0 +1,149 @@
+/* =========================
+   XP & LEVEL SYSTEM
+========================= */
+
+(function(){
+
+  const XP_PER_LEVEL = 100;
+  const MAX_HISTORY = 50; // limite historique parties
+
+  function safeNumber(value){
+    const n = parseInt(value);
+    return isNaN(n) ? 0 : n;
+  }
+
+  function getXP(){
+    return safeNumber(localStorage.getItem("xp"));
+  }
+
+  function setXP(value){
+    const safeXP = Math.max(0, safeNumber(value));
+    localStorage.setItem("xp", safeXP);
+  }
+
+  function getLevel(){
+    return Math.floor(getXP() / XP_PER_LEVEL) + 1;
+  }
+
+  function getXPProgress(){
+    return (getXP() % XP_PER_LEVEL);
+  }
+
+  function getXPPercent(){
+    return (getXPProgress() / XP_PER_LEVEL) * 100;
+  }
+
+  function addXP(amount){
+
+    if(typeof amount !== "number" || amount <= 0) return;
+
+    const oldLevel = getLevel();
+    const newXP = getXP() + amount;
+
+    setXP(newXP);
+
+    const newLevel = getLevel();
+
+    updateLevelUI();
+
+    if(newLevel > oldLevel){
+      levelUpAnimation(newLevel);
+    }
+  }
+
+  /* =========================
+     GAME STATISTICS
+  ========================= */
+
+  function saveGameResult(score){
+
+    if(typeof score !== "number") return;
+
+    let games;
+
+    try{
+      games = JSON.parse(localStorage.getItem("games")) || [];
+    }catch{
+      games = [];
+    }
+
+    games.push(score);
+
+    // limite historique
+    if(games.length > MAX_HISTORY){
+      games.shift();
+    }
+
+    localStorage.setItem("games", JSON.stringify(games));
+  }
+
+  function getStats(){
+
+    let games;
+
+    try{
+      games = JSON.parse(localStorage.getItem("games")) || [];
+    }catch{
+      games = [];
+    }
+
+    const total = games.length;
+    const best = total ? Math.max(...games) : 0;
+
+    const average = total
+      ? Number((games.reduce((a,b)=>a+b,0)/total).toFixed(1))
+      : 0;
+
+    return { total, best, average };
+  }
+
+  /* =========================
+     UI UPDATE
+  ========================= */
+
+  function updateLevelUI(){
+
+    const levelElement = document.getElementById("level");
+    const xpFill = document.getElementById("xpFill");
+
+    if(levelElement){
+      levelElement.innerText = getLevel();
+    }
+
+    if(xpFill){
+      xpFill.style.width = getXPPercent() + "%";
+    }
+
+  }
+
+  /* =========================
+     LEVEL UP ANIMATION
+  ========================= */
+
+  function levelUpAnimation(level){
+
+    const levelElement = document.getElementById("level");
+    if(!levelElement) return;
+
+    levelElement.style.transition = "0.3s ease";
+    levelElement.style.transform = "scale(1.4)";
+    levelElement.style.color = "#00f2fe";
+
+    setTimeout(()=>{
+      levelElement.style.transform = "scale(1)";
+      levelElement.style.color = "";
+    },500);
+  }
+
+  /* =========================
+     EXPORT GLOBAL
+  ========================= */
+
+  window.getXP = getXP;
+  window.addXP = addXP;
+  window.getLevel = getLevel;
+  window.getStats = getStats;
+  window.saveGameResult = saveGameResult;
+  window.updateLevelUI = updateLevelUI;
+
+})();

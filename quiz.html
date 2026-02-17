@@ -4,7 +4,7 @@
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GeoQuiz</title>
+  <title>GeoQuiz - Quiz</title>
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json">
@@ -19,6 +19,10 @@
 
 <body>
 
+<!-- =========================
+        HEADER
+========================= -->
+
 <header class="main-header">
 
   <div class="header-left"></div>
@@ -32,7 +36,6 @@
 
       <div class="level-info">
         ⭐ Niveau <span id="level">1</span>
-
         <div class="xp-bar">
           <div id="xpFill"></div>
         </div>
@@ -51,38 +54,72 @@
 
 </header>
 
+<!-- =========================
+        MAIN QUIZ
+========================= -->
+
 <main class="centered">
 
-  <h2>Bienvenue sur GeoQuiz</h2>
-  <p>Testez vos connaissances en Géographie & Histoire</p>
-
-  <div id="userSection">
-    <input type="text" id="usernameInput" placeholder="Entrez votre pseudo">
-    <button id="saveBtn" class="main-btn">Valider</button>
+  <!-- Progression -->
+  <div class="progress-info">
+    Question <span id="questionNumber">1</span> / <span id="totalQuestions">10</span>
   </div>
 
-  <button id="startBtn" class="main-btn" style="display:none;">
-    Commencer
-  </button>
+  <!-- TIMER -->
+  <div class="timer-container">
+    <svg width="120" height="120">
+
+      <!-- Cercle fond -->
+      <circle
+        cx="60" cy="60" r="50"
+        stroke="rgba(255,255,255,0.2)"
+        stroke-width="10"
+        fill="none"
+      />
+
+      <!-- Cercle progression -->
+      <circle
+        id="progressCircle"
+        cx="60" cy="60" r="50"
+        stroke="#00f2fe"
+        stroke-width="10"
+        fill="none"
+        stroke-linecap="round"
+        stroke-dasharray="314"
+        stroke-dashoffset="0"
+        transform="rotate(-90 60 60)"
+      />
+
+    </svg>
+
+    <div id="timerText" class="timer-text">15</div>
+  </div>
+
+  <!-- Question -->
+  <h2 id="questionText"></h2>
+
+  <!-- Réponses -->
+  <div id="answersContainer" class="answers-grid"></div>
 
 </main>
 
 <!-- =========================
-         SCRIPTS
+        SCRIPTS (ORDRE IMPORTANT)
 ========================= -->
 
+<script src="js/database.js"></script>
 <script src="js/stats.js"></script>
-<script src="js/user.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/transition.js"></script>
 <script src="js/navigation.js"></script>
+<script src="js/timer.js"></script>
+<script src="js/quiz.js"></script>
 
 <!-- SERVICE WORKER -->
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("service-worker.js")
-      .catch(() => {});
+    navigator.serviceWorker.register("service-worker.js").catch(()=>{});
   });
 }
 </script>

@@ -1,0 +1,339 @@
+/* ===============================
+   BASE
+================================= */
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:'Poppins',sans-serif;
+  background:linear-gradient(135deg,#141e30,#243b55);
+  color:white;
+  min-height:100vh;
+  transition:background .4s ease,color .4s ease;
+}
+
+body.light{
+  background:linear-gradient(135deg,#f4f4f4,#e0e0e0);
+  color:#111;
+}
+
+/* ===============================
+   HEADER
+================================= */
+
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:20px 40px;
+  background:rgba(0,0,0,0.3);
+  backdrop-filter:blur(10px);
+  transition:.3s;
+}
+
+body.light header{
+  background:rgba(255,255,255,0.6);
+}
+
+.logo{
+  font-family:'Orbitron', sans-serif;
+  font-size:40px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  background:linear-gradient(90deg,#00f2fe,#4facfe);
+  background-clip:text;
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.player-info{
+  text-align:right;
+  font-weight:600;
+  font-size:14px;
+}
+
+/* ===============================
+   XP BAR
+================================= */
+
+.xp-bar{
+  width:140px;
+  height:8px;
+  background:rgba(255,255,255,0.2);
+  border-radius:10px;
+  overflow:hidden;
+  margin-top:6px;
+}
+
+#xpFill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#00f2fe,#4facfe);
+  transition:width .5s ease;
+}
+
+/* ===============================
+   LAYOUT
+================================= */
+
+.centered{
+  text-align:center;
+  padding:60px 20px;
+  max-width:900px;
+  margin:auto;
+}
+
+/* ===============================
+   BUTTONS
+================================= */
+
+.main-btn{
+  padding:15px 30px;
+  font-size:18px;
+  border:none;
+  border-radius:14px;
+  background:linear-gradient(135deg,#00f2fe,#4facfe);
+  cursor:pointer;
+  color:black;
+  font-weight:600;
+  transition:.3s;
+  box-shadow:0 10px 25px rgba(0,0,0,.3);
+}
+
+.main-btn:hover{
+  transform:translateY(-3px);
+  box-shadow:0 15px 35px rgba(0,0,0,.4);
+}
+
+/* ===============================
+   GRID & CARDS
+================================= */
+
+.grid-2{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:30px;
+  margin-top:40px;
+}
+
+.card{
+  padding:40px;
+  border-radius:20px;
+  cursor:pointer;
+  transition:.3s;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(6px);
+  text-align:center;
+  font-size:20px;
+  font-weight:600;
+  box-shadow:0 10px 25px rgba(0,0,0,.3);
+}
+
+.card:hover{
+  transform:translateY(-10px) scale(1.03);
+  background:linear-gradient(135deg,#00f2fe,#4facfe);
+  color:black;
+}
+
+/* ===============================
+   INPUT
+================================= */
+
+input[type="text"]{
+  padding:12px;
+  border-radius:10px;
+  border:none;
+  margin:10px;
+  font-size:16px;
+  outline:none;
+  width:220px;
+}
+
+/* ===============================
+   QUIZ CONTAINER
+================================= */
+
+#quizContainer{
+  max-width:600px;
+  margin:40px auto;
+  text-align:center;
+}
+
+#questionText{
+  font-size:22px;
+  margin-bottom:20px;
+}
+
+/* ===============================
+   ANSWERS
+================================= */
+
+.answers-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:15px;
+  margin-top:20px;
+}
+
+.answer-btn{
+  padding:15px;
+  border-radius:12px;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+  transition:.3s ease;
+  background:rgba(255,255,255,0.1);
+  color:white;
+}
+
+body.light .answer-btn{
+  background:rgba(0,0,0,0.08);
+  color:#111;
+}
+
+.answer-btn:hover{
+  transform:translateY(-3px);
+  background:linear-gradient(135deg,#00f2fe,#4facfe);
+  color:black;
+}
+
+.answer-btn:disabled{
+  opacity:.7;
+  cursor:not-allowed;
+}
+
+.answer-btn.correct{
+  background:linear-gradient(135deg,#00ff9d,#00c853);
+  color:black;
+}
+
+.answer-btn.wrong{
+  background:linear-gradient(135deg,#ff4d4d,#c62828);
+  color:white;
+}
+
+/* ===============================
+   TIMER
+================================= */
+
+.timer-container{
+  position:relative;
+  width:120px;
+  height:120px;
+  margin:30px auto;
+  filter:drop-shadow(0 0 10px rgba(0,242,254,0.4));
+}
+
+.timer-text{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-size:28px;
+  font-weight:600;
+  font-family:'Orbitron',sans-serif;
+}
+
+#progressCircle{
+  transition:stroke-dashoffset 1s linear, stroke .3s;
+}
+
+.timer-warning #progressCircle{
+  stroke:#ff4d4d;
+}
+
+.timer-warning .timer-text{
+  color:#ff4d4d;
+}
+
+/* ===============================
+   DARK MODE SWITCH
+================================= */
+
+.switch{
+  position:relative;
+  width:40px;
+  height:20px;
+}
+
+.switch input{display:none;}
+
+.slider{
+  position:absolute;
+  inset:0;
+  background:#ccc;
+  border-radius:20px;
+  cursor:pointer;
+  transition:.4s;
+}
+
+.slider:before{
+  content:"";
+  position:absolute;
+  height:16px;
+  width:16px;
+  left:2px;
+  bottom:2px;
+  background:white;
+  border-radius:50%;
+  transition:.4s;
+}
+
+input:checked + .slider{
+  background:#00f2fe;
+}
+
+input:checked + .slider:before{
+  transform:translateX(20px);
+}
+
+/* ===============================
+   PAGE TRANSITIONS
+================================= */
+
+.fade-in{
+  animation:fadeIn .4s ease forwards;
+}
+
+.fade-out{
+  animation:fadeOut .4s ease forwards;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(15px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+@keyframes fadeOut{
+  from{opacity:1;}
+  to{opacity:0; transform:translateY(-15px);}
+}
+
+/* ===============================
+   RESPONSIVE
+================================= */
+
+@media(max-width:600px){
+
+  header{
+    flex-direction:column;
+    gap:15px;
+  }
+
+  .logo{
+    font-size:26px;
+  }
+
+  .grid-2{
+    gap:20px;
+  }
+
+  .card{
+    padding:25px;
+    font-size:18px;
+  }
+
+}

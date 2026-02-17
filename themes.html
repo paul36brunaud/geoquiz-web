@@ -4,7 +4,7 @@
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GeoQuiz</title>
+  <title>GeoQuiz - Thèmes</title>
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json">
@@ -32,7 +32,6 @@
 
       <div class="level-info">
         ⭐ Niveau <span id="level">1</span>
-
         <div class="xp-bar">
           <div id="xpFill"></div>
         </div>
@@ -53,16 +52,12 @@
 
 <main class="centered">
 
-  <h2>Bienvenue sur GeoQuiz</h2>
-  <p>Testez vos connaissances en Géographie & Histoire</p>
+  <h2 id="themeTitle">Thèmes</h2>
 
-  <div id="userSection">
-    <input type="text" id="usernameInput" placeholder="Entrez votre pseudo">
-    <button id="saveBtn" class="main-btn">Valider</button>
-  </div>
+  <div id="themeList" class="card-grid"></div>
 
-  <button id="startBtn" class="main-btn" style="display:none;">
-    Commencer
+  <button class="main-btn" onclick="navigate('category.html')">
+    ⬅ Retour
   </button>
 
 </main>
@@ -71,18 +66,18 @@
          SCRIPTS
 ========================= -->
 
+<script src="js/database.js"></script>
 <script src="js/stats.js"></script>
-<script src="js/user.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/transition.js"></script>
 <script src="js/navigation.js"></script>
+<script src="js/themes.js"></script>
 
 <!-- SERVICE WORKER -->
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("service-worker.js")
-      .catch(() => {});
+    navigator.serviceWorker.register("service-worker.js").catch(()=>{});
   });
 }
 </script>
