@@ -4,7 +4,7 @@
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GeoQuiz - Thèmes</title>
+  <title>Géo-Quiz - Thèmes</title>
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json">
@@ -19,26 +19,24 @@
 
 <body>
 
-<header class="main-header">
+<header>
 
-  <div class="header-left"></div>
+  <div></div>
 
-  <h1 class="logo">🌍 GeoQuiz</h1>
+  <h1 class="logo">🌍 Géo-Quiz</h1>
 
-  <div class="header-right">
+  <div class="player-info">
 
-    <div class="player-info">
-      👤 <span id="usernameDisplay">Invité</span>
+    👤 <span id="usernameDisplay">Invité</span>
 
-      <div class="level-info">
-        ⭐ Niveau <span id="level">1</span>
-        <div class="xp-bar">
-          <div id="xpFill"></div>
-        </div>
+    <div class="level-info">
+      ⭐ Niveau <span id="level">1</span>
+      <div class="xp-bar">
+        <div id="xpFill"></div>
       </div>
     </div>
 
-    <div class="theme-toggle">
+    <div style="margin-top:10px;">
       🌙
       <label class="switch">
         <input type="checkbox" id="themeSwitch">
@@ -50,11 +48,12 @@
 
 </header>
 
-<main class="centered">
+<main class="centered fade-in">
 
   <h2 id="themeTitle">Thèmes</h2>
 
-  <div id="themeList" class="card-grid"></div>
+  <!-- Correction ici -->
+  <div id="themeList" class="grid-2"></div>
 
   <button class="main-btn" onclick="navigate('category.html')">
     ⬅ Retour
@@ -69,7 +68,6 @@
 <script src="js/database.js"></script>
 <script src="js/stats.js"></script>
 <script src="js/theme.js"></script>
-<script src="js/transition.js"></script>
 <script src="js/navigation.js"></script>
 <script src="js/themes.js"></script>
 

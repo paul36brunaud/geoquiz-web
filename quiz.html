@@ -4,7 +4,7 @@
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GeoQuiz - Quiz</title>
+  <title>Géo-Quiz - Quiz</title>
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json">
@@ -19,46 +19,34 @@
 
 <body>
 
-<!-- =========================
-        HEADER
-========================= -->
+<header>
 
-<header class="main-header">
+  <div></div>
 
-  <div class="header-left"></div>
+  <h1 class="logo">🌍 Géo-Quiz</h1>
 
-  <h1 class="logo">🌍 GeoQuiz</h1>
+  <div class="player-info">
+    👤 <span id="usernameDisplay">Invité</span>
 
-  <div class="header-right">
-
-    <div class="player-info">
-      👤 <span id="usernameDisplay">Invité</span>
-
-      <div class="level-info">
-        ⭐ Niveau <span id="level">1</span>
-        <div class="xp-bar">
-          <div id="xpFill"></div>
-        </div>
+    <div class="level-info">
+      ⭐ Niveau <span id="level">1</span>
+      <div class="xp-bar">
+        <div id="xpFill"></div>
       </div>
     </div>
 
-    <div class="theme-toggle">
+    <div style="margin-top:10px;">
       🌙
       <label class="switch">
         <input type="checkbox" id="themeSwitch">
         <span class="slider"></span>
       </label>
     </div>
-
   </div>
 
 </header>
 
-<!-- =========================
-        MAIN QUIZ
-========================= -->
-
-<main class="centered">
+<main class="centered fade-in">
 
   <!-- Progression -->
   <div class="progress-info">
@@ -67,6 +55,7 @@
 
   <!-- TIMER -->
   <div class="timer-container">
+
     <svg width="120" height="120">
 
       <!-- Cercle fond -->
@@ -93,6 +82,7 @@
     </svg>
 
     <div id="timerText" class="timer-text">15</div>
+
   </div>
 
   <!-- Question -->
@@ -104,13 +94,12 @@
 </main>
 
 <!-- =========================
-        SCRIPTS (ORDRE IMPORTANT)
+        SCRIPTS
 ========================= -->
 
 <script src="js/database.js"></script>
 <script src="js/stats.js"></script>
 <script src="js/theme.js"></script>
-<script src="js/transition.js"></script>
 <script src="js/navigation.js"></script>
 <script src="js/timer.js"></script>
 <script src="js/quiz.js"></script>

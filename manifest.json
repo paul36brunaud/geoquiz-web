@@ -1,6 +1,6 @@
 {
-  "name": "GeoQuiz - Jeu de Culture Générale",
-  "short_name": "GeoQuiz",
+  "name": "Géo-Quiz - Jeu de Culture Générale",
+  "short_name": "Géo-Quiz",
   "description": "Testez vos connaissances en Géographie et Histoire.",
   "start_url": "./index.html?source=pwa",
   "scope": "./",

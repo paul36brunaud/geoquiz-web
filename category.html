@@ -1,45 +1,137 @@
-<script>
-document.addEventListener("DOMContentLoaded", () => {
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Géo-Quiz | Catégories</title>
 
-  /* 🔐 Protection utilisateur */
-  const username = localStorage.getItem("username");
+  <link rel="stylesheet" href="style.css" />
+</head>
 
-  if (!username) {
-    window.location.href = "index.html";
-    return;
-  }
+<body>
 
-  /* 👤 Affichage joueur */
-  const usernameDisplay = document.getElementById("usernameDisplay");
-  if (usernameDisplay) {
-    usernameDisplay.innerText = username;
-  }
+  <header class="top-bar">
+    <div class="logo">Géo-Quiz</div>
+    <div class="player-info">
+      👤 <span id="usernameDisplay"></span>
+      <span id="levelDisplay"></span>
+    </div>
+  </header>
 
-  /* 🔥 Mise à jour XP & niveau */
-  if (typeof updateLevelUI === "function") {
-    updateLevelUI();
-  }
+  <main class="fade-in">
 
-  /* 🎮 Gestion clic cartes catégories */
-  document.querySelectorAll(".card").forEach(card => {
+    <h2>Choisis une catégorie 🌍</h2>
 
-    card.addEventListener("click", () => {
+    <div class="category-grid">
 
-      const type = card.dataset.type;
-      if (!type) return;
+      <div class="category-card" data-type="geographie">
+        🌍
+        <h3>Géographie</h3>
+      </div>
 
-      // Utilise le système navigation centralisé
-      if (typeof chooseCategory === "function") {
-        chooseCategory(type);
-      } else {
-        localStorage.setItem("selectedCategory", type);
-        localStorage.removeItem("selectedTheme");
-        window.location.href = "themes.html";
+      <div class="category-card" data-type="capitales">
+        🏛️
+        <h3>Capitales</h3>
+      </div>
+
+      <div class="category-card" data-type="drapeaux">
+        🚩
+        <h3>Drapeaux</h3>
+      </div>
+
+      <div class="category-card" data-type="monuments">
+        🗼
+        <h3>Monuments</h3>
+      </div>
+
+    </div>
+
+    <div id="themesContainer" class="themes-container"></div>
+
+  </main>
+
+  <script>
+
+    document.addEventListener("DOMContentLoaded", () => {
+
+      /* =========================
+         🔐 PROTECTION UTILISATEUR
+      ========================= */
+      const username = localStorage.getItem("username");
+
+      if (!username) {
+        window.location.replace("index.html");
+        return;
       }
+
+      /* =========================
+         👤 AFFICHAGE JOUEUR
+      ========================= */
+      const usernameDisplay = document.getElementById("usernameDisplay");
+      if (usernameDisplay) {
+        usernameDisplay.textContent = username;
+      }
+
+      /* =========================
+         🔥 MISE À JOUR XP & NIVEAU
+      ========================= */
+      if (typeof updateLevelUI === "function") {
+        updateLevelUI();
+      }
+
+      /* =========================
+         🎮 GESTION DES CARTES
+      ========================= */
+      const cards = document.querySelectorAll(".category-card");
+
+      cards.forEach(card => {
+        card.addEventListener("click", () => {
+          const category = card.dataset.type;
+          if (!category) return;
+          selectCategory(category);
+        });
+      });
 
     });
 
-  });
 
-});
-</script>
+    /* =========================
+       📂 SÉLECTION CATÉGORIE
+    ========================= */
+    function selectCategory(category) {
+
+      localStorage.setItem("selectedCategory", category);
+
+      const themesContainer = document.getElementById("themesContainer");
+
+      themesContainer.innerHTML = `
+        <h3>Choisis un thème</h3>
+        <div class="theme-grid">
+          <button class="main-btn" data-theme="facile">Facile</button>
+          <button class="main-btn" data-theme="moyen">Moyen</button>
+          <button class="main-btn" data-theme="difficile">Difficile</button>
+        </div>
+      `;
+
+      document.querySelectorAll(".main-btn").forEach(button => {
+        button.addEventListener("click", () => {
+          const theme = button.dataset.theme;
+          startQuiz(theme);
+        });
+      });
+
+    }
+
+
+    /* =========================
+       🚀 DÉMARRER QUIZ
+    ========================= */
+    function startQuiz(theme) {
+      localStorage.setItem("selectedTheme", theme);
+      window.location.href = "quiz.html";
+    }
+
+  </script>
+
+</body>
+</html>

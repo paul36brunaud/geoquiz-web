@@ -8,6 +8,13 @@ let score = 0;
 let answered = false;
 
 /* =========================
+   SONS
+========================= */
+
+const correctSound = new Audio("assets/sounds/correct.mp3");
+const wrongSound = new Audio("assets/sounds/wrong.mp3");
+
+/* =========================
    INITIALISATION
 ========================= */
 
@@ -25,26 +32,25 @@ document.addEventListener("DOMContentLoaded", () => {
     !DATABASE[category] ||
     !DATABASE[category][theme]
   ) {
-    window.location.href = "category.html";
+    window.location.replace("category.html");
     return;
   }
 
-  // Affichage joueur
   const usernameDisplay = document.getElementById("usernameDisplay");
   if (usernameDisplay) {
-    usernameDisplay.innerText = username;
+    usernameDisplay.textContent = username;
   }
 
   if (typeof updateLevelUI === "function") {
     updateLevelUI();
   }
 
-  questions = DATABASE[category][theme];
+  questions = shuffleArray([...DATABASE[category][theme]]);
   currentIndex = 0;
   score = 0;
 
   const total = document.getElementById("totalQuestions");
-  if (total) total.innerText = questions.length;
+  if (total) total.textContent = questions.length;
 
   loadQuestion();
 });
@@ -70,22 +76,29 @@ function loadQuestion() {
 
   if (!questionText || !answersContainer) return;
 
-  questionText.innerText = questionData.question;
+  questionText.textContent = questionData.question;
   answersContainer.innerHTML = "";
 
   if (questionNumber) {
-    questionNumber.innerText = currentIndex + 1;
+    questionNumber.textContent = currentIndex + 1;
   }
 
-  questionData.options.forEach((option, index) => {
+  const shuffledOptions = shuffleArray(
+    questionData.options.map((option, index) => ({
+      text: option,
+      originalIndex: index
+    }))
+  );
+
+  shuffledOptions.forEach(optionData => {
 
     const btn = document.createElement("button");
-    btn.classList.add("answer-btn");
-    btn.innerText = option;
+    btn.className = "answer-btn";
+    btn.textContent = optionData.text;
 
     btn.addEventListener("click", () => {
       if (!answered) {
-        checkAnswer(index);
+        checkAnswer(optionData.originalIndex);
       }
     });
 
@@ -95,7 +108,7 @@ function loadQuestion() {
   if (typeof startTimer === "function") {
     startTimer(15, () => {
       if (!answered) {
-        checkAnswer(-1); // Temps écoulé
+        checkAnswer(-1);
       }
     });
   }
@@ -107,6 +120,7 @@ function loadQuestion() {
 
 function checkAnswer(selectedIndex) {
 
+  if (answered) return;
   answered = true;
 
   if (typeof stopTimer === "function") {
@@ -116,27 +130,34 @@ function checkAnswer(selectedIndex) {
   const correctIndex = questions[currentIndex].answer;
   const buttons = document.querySelectorAll(".answer-btn");
 
-  buttons.forEach((btn, index) => {
+  buttons.forEach(btn => {
 
     btn.disabled = true;
 
-    if (index === correctIndex) {
+    const optionText = btn.textContent;
+    const originalIndex = questions[currentIndex].options.indexOf(optionText);
+
+    if (originalIndex === correctIndex) {
       btn.classList.add("correct");
     }
 
-    if (index === selectedIndex && selectedIndex !== correctIndex) {
+    if (originalIndex === selectedIndex && selectedIndex !== correctIndex) {
       btn.classList.add("wrong");
     }
-
   });
 
   if (selectedIndex === correctIndex) {
     score++;
+    correctSound.currentTime = 0;
+    correctSound.play();
+    if (navigator.vibrate) navigator.vibrate(100);
+  } else {
+    wrongSound.currentTime = 0;
+    wrongSound.play();
+    if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
   }
 
-  setTimeout(() => {
-    nextQuestion();
-  }, 1000);
+  setTimeout(nextQuestion, 1000);
 }
 
 /* =========================
@@ -158,6 +179,27 @@ function endQuiz() {
   if (!main) return;
 
   const earnedXP = score * 20;
+  const percentage = Math.round((score / questions.length) * 100);
+
+  let mention = "";
+  let stars = "";
+  let badge = "";
+
+  if (percentage >= 90) {
+    mention = "🏆 Excellent !";
+    stars = "⭐⭐⭐";
+    badge = "gold-badge";
+  } 
+  else if (percentage >= 60) {
+    mention = "🥈 Bien joué !";
+    stars = "⭐⭐";
+    badge = "silver-badge";
+  } 
+  else {
+    mention = "🥉 À améliorer";
+    stars = "⭐";
+    badge = "bronze-badge";
+  }
 
   if (typeof addXP === "function") {
     addXP(earnedXP);
@@ -168,11 +210,28 @@ function endQuiz() {
   }
 
   main.innerHTML = `
-    <h2>Quiz terminé 🎉</h2>
-    <p>Score : ${score} / ${questions.length}</p>
-    <p>+ ${earnedXP} XP gagnés</p>
-    <button class="main-btn" onclick="navigate('category.html')">
-      Revenir aux catégories
-    </button>
+    <div class="result-screen fade-in">
+      <h2>Quiz terminé 🎉</h2>
+      <div class="stars">${stars}</div>
+      <p>Score : ${score} / ${questions.length}</p>
+      <p>${percentage}%</p>
+      <h3 class="${badge}">${mention}</h3>
+      <p>+ ${earnedXP} XP gagnés</p>
+      <button class="main-btn" onclick="navigate('category.html')">
+        Revenir aux catégories
+      </button>
+    </div>
   `;
+}
+
+/* =========================
+   UTILITAIRE
+========================= */
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
