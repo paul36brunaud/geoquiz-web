@@ -1,5 +1,5 @@
 /* =========================
-   QUIZ ENGINE PREMIUM
+   QUIZ ENGINE PREMIUM (NO SOUND)
 ========================= */
 
 let questions = [];
@@ -7,13 +7,6 @@ let currentIndex = 0;
 let score = 0;
 let answered = false;
 let timeLeft = 15;
-
-/* =========================
-   SONS
-========================= */
-
-const correctSound = new Audio("assets/sounds/correct.mp3");
-const wrongSound = new Audio("assets/sounds/wrong.mp3");
 
 /* =========================
    INITIALISATION
@@ -47,7 +40,6 @@ document.addEventListener("DOMContentLoaded", () => {
     updateLevelUI();
   }
 
-  /* 🔥 Récupération + filtre difficulté */
   const allQuestions =
     DATABASE[selectedMode][selectedCategory][selectedTheme];
 
@@ -175,15 +167,9 @@ function checkAnswer(selectedIndex) {
     const timeBonus = Math.max(0, timeLeft);
     score += timeBonus * 0.1;
 
-    correctSound.currentTime = 0;
-    correctSound.play();
-
     if (navigator.vibrate) navigator.vibrate(100);
 
   } else {
-
-    wrongSound.currentTime = 0;
-    wrongSound.play();
 
     if (navigator.vibrate) navigator.vibrate([200,100,200]);
   }
@@ -211,7 +197,7 @@ function endQuiz() {
   const difficulty =
     localStorage.getItem("selectedDifficulty") || "easy";
 
-  /* 🔥 XP selon difficulté */
+  /* XP selon difficulté */
   let xpMultiplier = 20;
   if (difficulty === "normal") xpMultiplier = 30;
   if (difficulty === "hard") xpMultiplier = 50;
