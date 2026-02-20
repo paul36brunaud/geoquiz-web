@@ -1,11 +1,15 @@
 /* =========================
-   XP & LEVEL SYSTEM
+   XP & LEVEL SYSTEM PRO
 ========================= */
 
 (function(){
 
   const XP_PER_LEVEL = 100;
-  const MAX_HISTORY = 50; // limite historique parties
+  const MAX_HISTORY = 50;
+
+  /* =========================
+     UTILITAIRES
+  ========================= */
 
   function safeNumber(value){
     const n = parseInt(value);
@@ -26,12 +30,32 @@
   }
 
   function getXPProgress(){
-    return (getXP() % XP_PER_LEVEL);
+    return getXP() % XP_PER_LEVEL;
   }
 
   function getXPPercent(){
     return (getXPProgress() / XP_PER_LEVEL) * 100;
   }
+
+  /* =========================
+     RANG GLOBAL
+  ========================= */
+
+  function getRank(){
+
+    const level = getLevel();
+
+    if(level >= 30) return { name: "💎 Diamant", color: "#00e0ff" };
+    if(level >= 20) return { name: "🥇 Or", color: "#ffd700" };
+    if(level >= 10) return { name: "🥈 Argent", color: "#c0c0c0" };
+    if(level >= 5)  return { name: "🥉 Bronze", color: "#cd7f32" };
+
+    return { name: "🎓 Débutant", color: "#ffffff" };
+  }
+
+  /* =========================
+     AJOUT XP
+  ========================= */
 
   function addXP(amount){
 
@@ -69,7 +93,6 @@
 
     games.push(score);
 
-    // limite historique
     if(games.length > MAX_HISTORY){
       games.shift();
     }
@@ -105,6 +128,7 @@
 
     const levelElement = document.getElementById("level");
     const xpFill = document.getElementById("xpFill");
+    const rankElement = document.getElementById("rank");
 
     if(levelElement){
       levelElement.innerText = getLevel();
@@ -114,6 +138,11 @@
       xpFill.style.width = getXPPercent() + "%";
     }
 
+    if(rankElement){
+      const rank = getRank();
+      rankElement.textContent = rank.name;
+      rankElement.style.color = rank.color;
+    }
   }
 
   /* =========================
@@ -126,13 +155,17 @@
     if(!levelElement) return;
 
     levelElement.style.transition = "0.3s ease";
-    levelElement.style.transform = "scale(1.4)";
+    levelElement.style.transform = "scale(1.5)";
     levelElement.style.color = "#00f2fe";
+
+    if(navigator.vibrate){
+      navigator.vibrate([200,100,200]);
+    }
 
     setTimeout(()=>{
       levelElement.style.transform = "scale(1)";
       levelElement.style.color = "";
-    },500);
+    },600);
   }
 
   /* =========================
@@ -142,6 +175,7 @@
   window.getXP = getXP;
   window.addXP = addXP;
   window.getLevel = getLevel;
+  window.getRank = getRank;
   window.getStats = getStats;
   window.saveGameResult = saveGameResult;
   window.updateLevelUI = updateLevelUI;

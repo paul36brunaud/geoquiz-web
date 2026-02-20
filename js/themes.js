@@ -1,5 +1,5 @@
 /* ===============================
-   THEMES PAGE
+   THEMES PAGE PRO
 ================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -7,58 +7,63 @@ document.addEventListener("DOMContentLoaded", () => {
   /* 🔐 Protection utilisateur */
   const username = localStorage.getItem("username");
   if (!username) {
-    window.location.href = "index.html";
+    window.location.replace("index.html");
     return;
   }
 
   /* 👤 Affichage joueur */
   const usernameDisplay = document.getElementById("usernameDisplay");
   if (usernameDisplay) {
-    usernameDisplay.innerText = username;
+    usernameDisplay.textContent = username;
   }
 
   if (typeof updateLevelUI === "function") {
     updateLevelUI();
   }
 
-  /* 📂 Récupération catégorie */
+  /* 📂 Récupération catégorie & mode */
+  const selectedMode = localStorage.getItem("selectedMode"); // geo ou histo
   const category = localStorage.getItem("selectedCategory");
+
   const themeList = document.getElementById("themeList");
   const themeTitle = document.getElementById("themeTitle");
 
-  if (!category || !themeList) return;
+  if (!selectedMode || !category || !themeList) return;
 
+  /* 🏷️ Titre dynamique */
   if (themeTitle) {
-    themeTitle.innerText = "Thèmes - " + category.toUpperCase();
+    themeTitle.textContent =
+      "Thèmes - " + category.charAt(0).toUpperCase() + category.slice(1);
   }
 
-  /* 📚 Vérifie database */
-  if (typeof database === "undefined") {
-    console.error("database.js non chargé");
+  /* 📚 Vérifie DATABASE */
+  if (typeof DATABASE === "undefined") {
+    console.error("DATABASE non chargé");
     return;
   }
 
-  const themes = database[category];
+  const modeData = DATABASE[selectedMode];
 
-  if (!themes) {
+  if (!modeData || !modeData[category]) {
     themeList.innerHTML = "<p>Aucun thème disponible.</p>";
     return;
   }
+
+  const themes = modeData[category];
+
+  /* 🧹 Nettoyage */
+  themeList.innerHTML = "";
 
   /* 🎨 Génération des cartes */
   Object.keys(themes).forEach(theme => {
 
     const card = document.createElement("div");
-    card.className = "card";
-    card.innerText = theme;
+    card.className = "card theme-card";
+    card.textContent = theme;
 
     card.addEventListener("click", () => {
-      if (typeof chooseTheme === "function") {
-        chooseTheme(theme);
-      } else {
-        localStorage.setItem("selectedTheme", theme);
-        window.location.href = "quiz.html";
-      }
+      localStorage.setItem("selectedTheme", theme);
+      window.location.href = "quiz.html";
     });
 
     themeList.appendChild(card);

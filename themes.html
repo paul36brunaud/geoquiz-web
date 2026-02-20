@@ -4,7 +4,7 @@
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Géo-Quiz - Thèmes</title>
+  <title>GeoQuiz | Thèmes</title>
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json">
@@ -19,11 +19,12 @@
 
 <body>
 
-<header>
+<header class="main-header">
 
   <div></div>
 
-  <h1 class="logo">🌍 Géo-Quiz</h1>
+  <!-- 🔥 Titre dynamique -->
+  <h1 class="logo" id="modeTitle">🌍 Geo-Quiz</h1>
 
   <div class="player-info">
 
@@ -36,7 +37,7 @@
       </div>
     </div>
 
-    <div style="margin-top:10px;">
+    <div class="theme-toggle">
       🌙
       <label class="switch">
         <input type="checkbox" id="themeSwitch">
@@ -50,12 +51,12 @@
 
 <main class="centered fade-in">
 
-  <h2 id="themeTitle">Thèmes</h2>
+  <h2 id="themeTitle">Choisis un thème</h2>
 
-  <!-- Correction ici -->
+  <!-- 🔥 Liste dynamique -->
   <div id="themeList" class="grid-2"></div>
 
-  <button class="main-btn" onclick="navigate('category.html')">
+  <button class="main-btn back-btn" onclick="window.location.href='categorie.html'">
     ⬅ Retour
   </button>
 
@@ -70,6 +71,84 @@
 <script src="js/theme.js"></script>
 <script src="js/navigation.js"></script>
 <script src="js/themes.js"></script>
+
+<script>
+
+/* =========================
+   INITIALISATION PAGE THEMES
+========================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const username = localStorage.getItem("username");
+  const selectedCategory = localStorage.getItem("selectedCategory");
+  const selectedMode = localStorage.getItem("selectedMode");
+
+  if (!username || !selectedCategory) {
+    window.location.replace("index.html");
+    return;
+  }
+
+  document.getElementById("usernameDisplay").textContent = username;
+
+  if (typeof updateLevelUI === "function") {
+    updateLevelUI();
+  }
+
+  /* 🔥 Adapter titre Géo / Histo */
+  const modeTitle = document.getElementById("modeTitle");
+
+  if (selectedMode === "geo") {
+    modeTitle.textContent = "🌍 Géo-Quiz";
+  } else if (selectedMode === "histo") {
+    modeTitle.textContent = "📜 Histo-Quiz";
+  }
+
+  loadThemes(selectedCategory);
+});
+
+
+/* =========================
+   CHARGER THEMES
+========================= */
+
+function loadThemes(category) {
+
+  const themeList = document.getElementById("themeList");
+  themeList.innerHTML = "";
+
+  if (typeof DATABASE === "undefined" || !DATABASE[category]) {
+    themeList.innerHTML = "<p>Aucun thème disponible.</p>";
+    return;
+  }
+
+  const themes = Object.keys(DATABASE[category]);
+
+  themes.forEach(theme => {
+
+    const btn = document.createElement("button");
+    btn.className = "theme-card";
+    btn.textContent = formatThemeName(theme);
+
+    btn.addEventListener("click", () => {
+      localStorage.setItem("selectedTheme", theme);
+      window.location.href = "quiz.html";
+    });
+
+    themeList.appendChild(btn);
+  });
+}
+
+
+/* =========================
+   FORMAT NOM THEME
+========================= */
+
+function formatThemeName(name) {
+  return name.charAt(0).toUpperCase() + name.slice(1);
+}
+
+</script>
 
 <!-- SERVICE WORKER -->
 <script>

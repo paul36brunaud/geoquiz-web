@@ -1,14 +1,19 @@
 /* =========================
-   DATABASE GEOQUIZ
+   DATABASE GEOQUIZ PRO
 ========================= */
 
 (function(){
 
   const DATABASE = {
 
+    /* =========================
+       🌍 GEO
+    ========================= */
     geo: {
 
       Europe: [
+
+        /* EASY */
         {
           question: "Quelle est la capitale de la France ?",
           options: ["Paris", "Madrid", "Rome", "Berlin"],
@@ -21,27 +26,39 @@
           answer: 1,
           difficulty: "easy"
         },
+
+        /* MEDIUM */
         {
-          question: "Quelle est la capitale de l'Allemagne ?",
-          options: ["Berlin", "Zurich", "Prague", "Bruxelles"],
+          question: "Quel fleuve traverse Budapest ?",
+          options: ["Danube", "Rhin", "Volga", "Seine"],
           answer: 0,
-          difficulty: "easy"
+          difficulty: "medium"
         },
         {
-          question: "Quelle est la capitale de l'Espagne ?",
-          options: ["Barcelone", "Madrid", "Séville", "Valence"],
+          question: "Quel pays possède la ville de Dubrovnik ?",
+          options: ["Grèce", "Croatie", "Bulgarie", "Roumanie"],
           answer: 1,
-          difficulty: "easy"
+          difficulty: "medium"
+        },
+
+        /* HARD */
+        {
+          question: "Quelle est la plus haute montagne d'Europe ?",
+          options: ["Mont Blanc", "Elbrouz", "Cervin", "Grossglockner"],
+          answer: 1,
+          difficulty: "hard"
         },
         {
-          question: "Quelle est la capitale du Portugal ?",
-          options: ["Lisbonne", "Porto", "Madrid", "Rome"],
-          answer: 0,
-          difficulty: "easy"
+          question: "Quel micro-État est enclavé dans l’Italie ?",
+          options: ["Andorre", "Monaco", "Saint-Marin", "Liechtenstein"],
+          answer: 2,
+          difficulty: "hard"
         }
+
       ],
 
       Asie: [
+
         {
           question: "Quelle est la capitale du Japon ?",
           options: ["Tokyo", "Séoul", "Pékin", "Bangkok"],
@@ -49,32 +66,22 @@
           difficulty: "easy"
         },
         {
-          question: "Quelle est la capitale de la Chine ?",
-          options: ["Shanghai", "Pékin", "Hong Kong", "Taipei"],
-          answer: 1,
-          difficulty: "easy"
+          question: "Quel désert se trouve en Mongolie et en Chine ?",
+          options: ["Gobi", "Sahara", "Karakoum", "Taklamakan"],
+          answer: 0,
+          difficulty: "medium"
         },
         {
-          question: "Quelle est la capitale de la Corée du Sud ?",
-          options: ["Busan", "Séoul", "Pyongyang", "Osaka"],
-          answer: 1,
-          difficulty: "easy"
-        },
-        {
-          question: "Quelle est la capitale de la Thaïlande ?",
-          options: ["Phuket", "Bangkok", "Hanoï", "Manille"],
-          answer: 1,
-          difficulty: "easy"
-        },
-        {
-          question: "Quelle est la capitale de l'Inde ?",
-          options: ["Mumbai", "New Delhi", "Chennai", "Goa"],
-          answer: 1,
-          difficulty: "easy"
+          question: "Quel est le plus long fleuve d'Asie ?",
+          options: ["Yangtsé", "Mékong", "Indus", "Gange"],
+          answer: 0,
+          difficulty: "hard"
         }
+
       ],
 
       Afrique: [
+
         {
           question: "Quelle est la capitale du Maroc ?",
           options: ["Casablanca", "Rabat", "Marrakech", "Tanger"],
@@ -82,39 +89,116 @@
           difficulty: "easy"
         },
         {
-          question: "Quelle est la capitale de l'Égypte ?",
-          options: ["Alexandrie", "Le Caire", "Gizeh", "Louxor"],
+          question: "Quel est le plus grand désert du monde ?",
+          options: ["Sahara", "Kalahari", "Namib", "Atacama"],
+          answer: 0,
+          difficulty: "medium"
+        },
+        {
+          question: "Quel lac est le plus grand d'Afrique ?",
+          options: ["Victoria", "Tanganyika", "Malawi", "Tchad"],
+          answer: 0,
+          difficulty: "hard"
+        }
+
+      ]
+
+    },
+
+
+    /* =========================
+       📜 HISTOIRE
+    ========================= */
+    histo: {
+
+      Antiquité: [
+
+        {
+          question: "Qui était le premier empereur romain ?",
+          options: ["Jules César", "Auguste", "Néron", "Trajan"],
           answer: 1,
           difficulty: "easy"
         },
         {
-          question: "Quelle est la capitale du Sénégal ?",
-          options: ["Dakar", "Abidjan", "Bamako", "Conakry"],
+          question: "Quelle civilisation a construit les pyramides ?",
+          options: ["Romains", "Grecs", "Égyptiens", "Mayas"],
+          answer: 2,
+          difficulty: "easy"
+        },
+        {
+          question: "En quelle année débute la République romaine ?",
+          options: ["509 av. J.-C.", "44 av. J.-C.", "27 av. J.-C.", "476"],
+          answer: 0,
+          difficulty: "hard"
+        }
+
+      ],
+
+      MoyenAge: [
+
+        {
+          question: "En quelle année a eu lieu la bataille d’Hastings ?",
+          options: ["1066", "1215", "1492", "732"],
+          answer: 0,
+          difficulty: "medium"
+        },
+        {
+          question: "Qui était Charlemagne ?",
+          options: [
+            "Un roi franc",
+            "Un empereur romain",
+            "Un pape",
+            "Un viking"
+          ],
+          answer: 0,
+          difficulty: "easy"
+        }
+
+      ],
+
+      Moderne: [
+
+        {
+          question: "En quelle année débute la Révolution française ?",
+          options: ["1789", "1776", "1815", "1799"],
           answer: 0,
           difficulty: "easy"
         },
         {
-          question: "Quelle est la capitale du Kenya ?",
-          options: ["Mombasa", "Nairobi", "Kampala", "Addis-Abeba"],
+          question: "Qui était Napoléon Bonaparte ?",
+          options: [
+            "Un roi d'Angleterre",
+            "Un empereur français",
+            "Un président américain",
+            "Un tsar russe"
+          ],
           answer: 1,
           difficulty: "easy"
         },
         {
-          question: "Quelle est la capitale du Nigeria ?",
-          options: ["Lagos", "Abuja", "Accra", "Yaoundé"],
-          answer: 1,
-          difficulty: "easy"
+          question: "Quel traité met fin à la Première Guerre mondiale ?",
+          options: [
+            "Traité de Versailles",
+            "Traité de Rome",
+            "Traité de Vienne",
+            "Traité de Paris"
+          ],
+          answer: 0,
+          difficulty: "medium"
         }
+
       ]
 
     }
 
   };
 
-  // 🔒 Empêche modification accidentelle
-  Object.freeze(DATABASE);
 
-  // 🌍 Rend accessible globalement
+  /* 🔒 Protection */
+  Object.freeze(DATABASE);
+  Object.freeze(DATABASE.geo);
+  Object.freeze(DATABASE.histo);
+
   window.DATABASE = DATABASE;
 
 })();

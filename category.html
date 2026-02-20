@@ -5,133 +5,149 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Géo-Quiz | Catégories</title>
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 
 <body>
 
-  <header class="top-bar">
-    <div class="logo">Géo-Quiz</div>
+<header class="main-header">
+
+  <h1 class="logo centered-title">
+    🌍 Géo-Quiz & 📜 Histo-Quiz
+  </h1>
+
+  <div class="header-right">
     <div class="player-info">
       👤 <span id="usernameDisplay"></span>
-      <span id="levelDisplay"></span>
+      ⭐ <span id="levelDisplay"></span>
     </div>
-  </header>
+  </div>
 
-  <main class="fade-in">
+</header>
 
-    <h2>Choisis une catégorie 🌍</h2>
+<main class="fade-in centered">
 
-    <div class="category-grid">
+  <h2 id="categoryTitle">Choisis une catégorie</h2>
 
-      <div class="category-card" data-type="geographie">
-        🌍
-        <h3>Géographie</h3>
-      </div>
+  <div id="categoryGrid" class="category-grid"></div>
 
-      <div class="category-card" data-type="capitales">
-        🏛️
-        <h3>Capitales</h3>
-      </div>
+  <div id="themesContainer" class="themes-container"></div>
 
-      <div class="category-card" data-type="drapeaux">
-        🚩
-        <h3>Drapeaux</h3>
-      </div>
+  <button class="main-btn back-btn" onclick="goBack()">
+    ⬅ Retour
+  </button>
 
-      <div class="category-card" data-type="monuments">
-        🗼
-        <h3>Monuments</h3>
-      </div>
+</main>
 
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const username = localStorage.getItem("username");
+  const selectedMode = localStorage.getItem("selectedMode");
+
+  /* 🔐 Protection */
+  if (!username || !selectedMode) {
+    window.location.replace("index.html");
+    return;
+  }
+
+  /* 👤 Affichage joueur */
+  document.getElementById("usernameDisplay").textContent = username;
+
+  if (typeof updateLevelUI === "function") {
+    updateLevelUI();
+  }
+
+  loadCategories(selectedMode);
+
+});
+
+
+/* =========================
+   📂 CHARGEMENT CATÉGORIES
+========================= */
+function loadCategories(mode) {
+
+  const grid = document.getElementById("categoryGrid");
+  const title = document.getElementById("categoryTitle");
+
+  let categories = [];
+
+  if (mode === "geo") {
+
+    title.textContent = "🌍 Catégories Géo-Quiz";
+
+    categories = [
+      { name: "Capitales du monde", type: "capitales" },
+      { name: "Pays & Drapeaux", type: "drapeaux" },
+      { name: "Continents", type: "continents" },
+      { name: "Mers & Océans", type: "mers" },
+      { name: "Relief & Montagnes", type: "relief" }
+    ];
+
+  } else if (mode === "histo") {
+
+    title.textContent = "📜 Catégories Histo-Quiz";
+
+    categories = [
+      { name: "Antiquité", type: "antiquite" },
+      { name: "Moyen Âge", type: "moyen_age" },
+      { name: "Révolution Française", type: "revolution" },
+      { name: "Guerres Mondiales", type: "guerres" },
+      { name: "Civilisations", type: "civilisations" }
+    ];
+  }
+
+  grid.innerHTML = "";
+
+  categories.forEach(cat => {
+    const card = document.createElement("div");
+    card.className = "category-card";
+    card.innerHTML = `<h3>${cat.name}</h3>`;
+    card.addEventListener("click", () => selectCategory(cat.type));
+    grid.appendChild(card);
+  });
+}
+
+
+/* =========================
+   🎮 SÉLECTION CATÉGORIE
+========================= */
+function selectCategory(category) {
+
+  localStorage.setItem("selectedCategory", category);
+
+  const container = document.getElementById("themesContainer");
+
+  container.innerHTML = `
+    <h3>Choisis une difficulté</h3>
+    <div class="theme-grid">
+      <button class="main-btn" onclick="startQuiz('facile')">Facile</button>
+      <button class="main-btn" onclick="startQuiz('moyen')">Moyen</button>
+      <button class="main-btn" onclick="startQuiz('difficile')">Difficile</button>
     </div>
-
-    <div id="themesContainer" class="themes-container"></div>
-
-  </main>
-
-  <script>
-
-    document.addEventListener("DOMContentLoaded", () => {
-
-      /* =========================
-         🔐 PROTECTION UTILISATEUR
-      ========================= */
-      const username = localStorage.getItem("username");
-
-      if (!username) {
-        window.location.replace("index.html");
-        return;
-      }
-
-      /* =========================
-         👤 AFFICHAGE JOUEUR
-      ========================= */
-      const usernameDisplay = document.getElementById("usernameDisplay");
-      if (usernameDisplay) {
-        usernameDisplay.textContent = username;
-      }
-
-      /* =========================
-         🔥 MISE À JOUR XP & NIVEAU
-      ========================= */
-      if (typeof updateLevelUI === "function") {
-        updateLevelUI();
-      }
-
-      /* =========================
-         🎮 GESTION DES CARTES
-      ========================= */
-      const cards = document.querySelectorAll(".category-card");
-
-      cards.forEach(card => {
-        card.addEventListener("click", () => {
-          const category = card.dataset.type;
-          if (!category) return;
-          selectCategory(category);
-        });
-      });
-
-    });
+  `;
+}
 
 
-    /* =========================
-       📂 SÉLECTION CATÉGORIE
-    ========================= */
-    function selectCategory(category) {
-
-      localStorage.setItem("selectedCategory", category);
-
-      const themesContainer = document.getElementById("themesContainer");
-
-      themesContainer.innerHTML = `
-        <h3>Choisis un thème</h3>
-        <div class="theme-grid">
-          <button class="main-btn" data-theme="facile">Facile</button>
-          <button class="main-btn" data-theme="moyen">Moyen</button>
-          <button class="main-btn" data-theme="difficile">Difficile</button>
-        </div>
-      `;
-
-      document.querySelectorAll(".main-btn").forEach(button => {
-        button.addEventListener("click", () => {
-          const theme = button.dataset.theme;
-          startQuiz(theme);
-        });
-      });
-
-    }
+/* =========================
+   🚀 DÉMARRER QUIZ
+========================= */
+function startQuiz(theme) {
+  localStorage.setItem("selectedTheme", theme);
+  window.location.href = "quiz.html";
+}
 
 
-    /* =========================
-       🚀 DÉMARRER QUIZ
-    ========================= */
-    function startQuiz(theme) {
-      localStorage.setItem("selectedTheme", theme);
-      window.location.href = "quiz.html";
-    }
+/* =========================
+   ⬅ RETOUR
+========================= */
+function goBack() {
+  window.location.href = "menu.html";
+}
 
-  </script>
+</script>
 
 </body>
 </html>

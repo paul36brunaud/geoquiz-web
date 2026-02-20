@@ -1,11 +1,14 @@
 /* =========================
-   TRANSITION SYSTEM
+   TRANSITION SYSTEM PRO
 ========================= */
 
 (function(){
 
   let isNavigating = false;
   const TRANSITION_DURATION = 400;
+
+  const prefersReducedMotion =
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* =========================
      Animation au chargement
@@ -16,8 +19,12 @@
     if(!document.body) return;
 
     document.body.classList.remove("fade-out");
-    document.body.classList.add("fade-in");
 
+    if(!prefersReducedMotion){
+      document.body.classList.add("fade-in");
+    }
+
+    window.scrollTo(0, 0);
   });
 
   /* =========================
@@ -29,7 +36,7 @@
     if(isNavigating) return;
     if(typeof page !== "string" || page.trim() === "") return;
 
-    if(!document.body){
+    if(!document.body || prefersReducedMotion){
       window.location.href = page;
       return;
     }
@@ -42,7 +49,6 @@
     setTimeout(()=>{
       window.location.href = page;
     }, TRANSITION_DURATION);
-
   }
 
   /* =========================
@@ -60,14 +66,15 @@
     if(
       link.target === "_blank" ||
       href.startsWith("#") ||
-      link.hostname !== window.location.hostname
+      link.hostname !== window.location.hostname ||
+      href.startsWith("mailto:") ||
+      href.startsWith("tel:")
     ){
       return;
     }
 
     e.preventDefault();
     navigate(href);
-
   });
 
   /* =========================
@@ -76,6 +83,7 @@
 
   window.addEventListener("pageshow", () => {
     isNavigating = false;
+    document.body.classList.remove("fade-out");
   });
 
   /* =========================

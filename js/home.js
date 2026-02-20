@@ -16,6 +16,10 @@ document.addEventListener("DOMContentLoaded", () => {
      INITIALISATION XP & UI
   ========================= */
 
+  if (!localStorage.getItem("xp")) {
+    localStorage.setItem("xp", 0);
+  }
+
   if (typeof updateLevelUI === "function") {
     updateLevelUI();
   }
@@ -25,48 +29,64 @@ document.addEventListener("DOMContentLoaded", () => {
   ========================= */
 
   if (username && usernameDisplay && userSection && startBtn) {
-    usernameDisplay.innerText = username;
+    usernameDisplay.textContent = username;
     userSection.style.display = "none";
     startBtn.style.display = "inline-block";
   }
 
   /* =========================
-     SAUVEGARDE UTILISATEUR
+     FONCTION SAUVEGARDE
   ========================= */
 
-  if (saveBtn && input) {
+  function saveUsername() {
 
-    saveBtn.addEventListener("click", () => {
+    if (!input) return;
 
-      const value = input.value.trim();
+    const value = input.value.trim();
 
-      if (value.length < 3) {
-        alert("Le pseudo doit contenir au moins 3 caractères");
-        return;
+    if (value.length < 3) {
+      alert("Le pseudo doit contenir au moins 3 caractères.");
+      return;
+    }
+
+    localStorage.setItem("username", value);
+
+    if (!localStorage.getItem("xp")) {
+      localStorage.setItem("xp", 0);
+    }
+
+    if (usernameDisplay) {
+      usernameDisplay.textContent = value;
+    }
+
+    if (userSection && startBtn) {
+      userSection.style.display = "none";
+      startBtn.style.display = "inline-block";
+    }
+
+    if (typeof updateLevelUI === "function") {
+      updateLevelUI();
+    }
+  }
+
+  /* =========================
+     BOUTON SAUVEGARDE
+  ========================= */
+
+  if (saveBtn) {
+    saveBtn.addEventListener("click", saveUsername);
+  }
+
+  /* =========================
+     VALIDATION AVEC ENTRÉE
+  ========================= */
+
+  if (input) {
+    input.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        saveUsername();
       }
-
-      localStorage.setItem("username", value);
-
-      // Initialise XP si inexistant
-      if (!localStorage.getItem("xp")) {
-        localStorage.setItem("xp", 0);
-      }
-
-      if (usernameDisplay) {
-        usernameDisplay.innerText = value;
-      }
-
-      if (userSection && startBtn) {
-        userSection.style.display = "none";
-        startBtn.style.display = "inline-block";
-      }
-
-      if (typeof updateLevelUI === "function") {
-        updateLevelUI();
-      }
-
     });
-
   }
 
   /* =========================
@@ -76,10 +96,20 @@ document.addEventListener("DOMContentLoaded", () => {
   if (startBtn) {
     startBtn.addEventListener("click", () => {
 
+      if (!localStorage.getItem("username")) {
+        alert("Veuillez entrer un pseudo.");
+        return;
+      }
+
+      /* 🔥 Reset mode sélectionné */
+      localStorage.removeItem("selectedMode");
+      localStorage.removeItem("selectedCategory");
+      localStorage.removeItem("selectedTheme");
+
       if (typeof navigate === "function") {
-        navigate("category.html");
+        navigate("categorie.html"); // ✅ corrigé
       } else {
-        window.location.href = "category.html";
+        window.location.href = "categorie.html";
       }
 
     });

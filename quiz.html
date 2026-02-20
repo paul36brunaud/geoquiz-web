@@ -4,7 +4,7 @@
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Géo-Quiz - Quiz</title>
+  <title>GeoQuiz | Partie</title>
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json">
@@ -19,11 +19,14 @@
 
 <body>
 
-<header>
+<header class="main-header">
 
   <div></div>
 
-  <h1 class="logo">🌍 Géo-Quiz</h1>
+  <!-- 🔥 Titre dynamique -->
+  <h1 class="logo" id="quizTitle">
+    🌍 Quiz
+  </h1>
 
   <div class="player-info">
     👤 <span id="usernameDisplay">Invité</span>
@@ -35,30 +38,39 @@
       </div>
     </div>
 
-    <div style="margin-top:10px;">
+    <div class="theme-toggle">
       🌙
       <label class="switch">
         <input type="checkbox" id="themeSwitch">
         <span class="slider"></span>
       </label>
     </div>
+
   </div>
 
 </header>
 
-<main class="centered fade-in">
+<main class="centered fade-in quiz-container">
 
-  <!-- Progression -->
-  <div class="progress-info">
-    Question <span id="questionNumber">1</span> / <span id="totalQuestions">10</span>
+  <!-- 📊 Progression -->
+  <div class="progress-wrapper">
+
+    <div class="progress-info">
+      Question <span id="questionNumber">1</span> / 
+      <span id="totalQuestions">10</span>
+    </div>
+
+    <div class="progress-bar">
+      <div id="progressFill"></div>
+    </div>
+
   </div>
 
-  <!-- TIMER -->
+  <!-- ⏱ TIMER -->
   <div class="timer-container">
 
     <svg width="120" height="120">
 
-      <!-- Cercle fond -->
       <circle
         cx="60" cy="60" r="50"
         stroke="rgba(255,255,255,0.2)"
@@ -66,7 +78,6 @@
         fill="none"
       />
 
-      <!-- Cercle progression -->
       <circle
         id="progressCircle"
         cx="60" cy="60" r="50"
@@ -85,10 +96,10 @@
 
   </div>
 
-  <!-- Question -->
-  <h2 id="questionText"></h2>
+  <!-- ❓ Question -->
+  <h2 id="questionText" class="question-text"></h2>
 
-  <!-- Réponses -->
+  <!-- 🔘 Réponses -->
   <div id="answersContainer" class="answers-grid"></div>
 
 </main>
@@ -103,6 +114,24 @@
 <script src="js/navigation.js"></script>
 <script src="js/timer.js"></script>
 <script src="js/quiz.js"></script>
+
+<script>
+
+/* 🔥 Adapter titre selon mode */
+document.addEventListener("DOMContentLoaded", () => {
+
+  const mode = localStorage.getItem("selectedMode");
+  const title = document.getElementById("quizTitle");
+
+  if (mode === "geo") {
+    title.textContent = "🌍 Géo-Quiz";
+  } else if (mode === "histo") {
+    title.textContent = "📜 Histo-Quiz";
+  }
+
+});
+
+</script>
 
 <!-- SERVICE WORKER -->
 <script>

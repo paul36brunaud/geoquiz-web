@@ -1,11 +1,12 @@
 /* =========================
-   QUIZ ENGINE PREMIUM
+   QUIZ ENGINE PRO
 ========================= */
 
 let questions = [];
 let currentIndex = 0;
 let score = 0;
 let answered = false;
+let timeLeft = 15;
 
 /* =========================
    SONS
@@ -32,14 +33,11 @@ document.addEventListener("DOMContentLoaded", () => {
     !DATABASE[category] ||
     !DATABASE[category][theme]
   ) {
-    window.location.replace("category.html");
+    window.location.replace("categorie.html"); // 🔥 corrigé
     return;
   }
 
-  const usernameDisplay = document.getElementById("usernameDisplay");
-  if (usernameDisplay) {
-    usernameDisplay.textContent = username;
-  }
+  document.getElementById("usernameDisplay").textContent = username;
 
   if (typeof updateLevelUI === "function") {
     updateLevelUI();
@@ -49,8 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
   currentIndex = 0;
   score = 0;
 
-  const total = document.getElementById("totalQuestions");
-  if (total) total.textContent = questions.length;
+  document.getElementById("totalQuestions").textContent = questions.length;
 
   loadQuestion();
 });
@@ -69,20 +66,20 @@ function loadQuestion() {
   answered = false;
 
   const questionData = questions[currentIndex];
-
   const questionText = document.getElementById("questionText");
   const answersContainer = document.getElementById("answersContainer");
   const questionNumber = document.getElementById("questionNumber");
-
-  if (!questionText || !answersContainer) return;
+  const progressFill = document.getElementById("progressFill");
 
   questionText.textContent = questionData.question;
   answersContainer.innerHTML = "";
+  questionNumber.textContent = currentIndex + 1;
 
-  if (questionNumber) {
-    questionNumber.textContent = currentIndex + 1;
-  }
+  /* 🔥 Barre progression */
+  const progressPercent = ((currentIndex) / questions.length) * 100;
+  if (progressFill) progressFill.style.width = progressPercent + "%";
 
+  /* 🔀 Mélange réponses */
   const shuffledOptions = shuffleArray(
     questionData.options.map((option, index) => ({
       text: option,
@@ -105,8 +102,11 @@ function loadQuestion() {
     answersContainer.appendChild(btn);
   });
 
+  /* ⏱ TIMER */
   if (typeof startTimer === "function") {
-    startTimer(15, () => {
+    startTimer(15, (remaining) => {
+      timeLeft = remaining;
+    }, () => {
       if (!answered) {
         checkAnswer(-1);
       }
@@ -146,18 +146,28 @@ function checkAnswer(selectedIndex) {
     }
   });
 
+  /* 🎯 SCORE + BONUS TEMPS */
   if (selectedIndex === correctIndex) {
+
     score++;
+
+    const timeBonus = Math.max(0, timeLeft);
+    score += timeBonus * 0.1; // bonus léger rapidité
+
     correctSound.currentTime = 0;
     correctSound.play();
+
     if (navigator.vibrate) navigator.vibrate(100);
+
   } else {
+
     wrongSound.currentTime = 0;
     wrongSound.play();
+
     if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
   }
 
-  setTimeout(nextQuestion, 1000);
+  setTimeout(nextQuestion, 1200);
 }
 
 /* =========================
@@ -176,10 +186,18 @@ function nextQuestion() {
 function endQuiz() {
 
   const main = document.querySelector("main");
-  if (!main) return;
 
-  const earnedXP = score * 20;
-  const percentage = Math.round((score / questions.length) * 100);
+  const finalScore = Math.round(score);
+  const percentage = Math.round((finalScore / questions.length) * 100);
+
+  const theme = localStorage.getItem("selectedTheme");
+
+  /* 🔥 XP selon difficulté */
+  let xpMultiplier = 20;
+  if (theme === "moyen") xpMultiplier = 30;
+  if (theme === "difficile") xpMultiplier = 40;
+
+  const earnedXP = finalScore * xpMultiplier;
 
   let mention = "";
   let stars = "";
@@ -206,18 +224,18 @@ function endQuiz() {
   }
 
   if (typeof saveGameResult === "function") {
-    saveGameResult(score);
+    saveGameResult(finalScore);
   }
 
   main.innerHTML = `
     <div class="result-screen fade-in">
       <h2>Quiz terminé 🎉</h2>
       <div class="stars">${stars}</div>
-      <p>Score : ${score} / ${questions.length}</p>
+      <p>Score : ${finalScore} / ${questions.length}</p>
       <p>${percentage}%</p>
       <h3 class="${badge}">${mention}</h3>
       <p>+ ${earnedXP} XP gagnés</p>
-      <button class="main-btn" onclick="navigate('category.html')">
+      <button class="main-btn" onclick="window.location.href='categorie.html'">
         Revenir aux catégories
       </button>
     </div>
@@ -235,3 +253,9 @@ function shuffleArray(array) {
   }
   return array;
 }
+
+const difficulty = localStorage.getItem("selectedDifficulty") || "easy";
+
+let questions = DATABASE[selectedMode][selectedCategory][selectedTheme];
+
+questions = questions.filter(q => q.difficulty === difficulty);
