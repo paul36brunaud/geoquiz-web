@@ -1,5 +1,5 @@
 /* =========================
-   XP & LEVEL SYSTEM PRO
+   XP & LEVEL SYSTEM PREMIUM
 ========================= */
 
 (function(){
@@ -8,7 +8,7 @@
   const MAX_HISTORY = 50;
 
   /* =========================
-     UTILITAIRES
+     UTILITAIRES SÉCURISÉS
   ========================= */
 
   function safeNumber(value){
@@ -68,7 +68,7 @@
 
     const newLevel = getLevel();
 
-    updateLevelUI();
+    updateAllUI();
 
     if(newLevel > oldLevel){
       levelUpAnimation(newLevel);
@@ -121,7 +121,7 @@
   }
 
   /* =========================
-     UI UPDATE
+     UI UPDATE CENTRALISÉ
   ========================= */
 
   function updateLevelUI(){
@@ -145,6 +145,20 @@
     }
   }
 
+  function updateXPBadge(){
+
+    const xpValue = document.getElementById("xpValue");
+
+    if(xpValue){
+      xpValue.textContent = getXP();
+    }
+  }
+
+  function updateAllUI(){
+    updateLevelUI();
+    updateXPBadge();
+  }
+
   /* =========================
      LEVEL UP ANIMATION
   ========================= */
@@ -155,7 +169,7 @@
     if(!levelElement) return;
 
     levelElement.style.transition = "0.3s ease";
-    levelElement.style.transform = "scale(1.5)";
+    levelElement.style.transform = "scale(1.6)";
     levelElement.style.color = "#00f2fe";
 
     if(navigator.vibrate){
@@ -169,6 +183,14 @@
   }
 
   /* =========================
+     INIT AUTO
+  ========================= */
+
+  document.addEventListener("DOMContentLoaded", () => {
+    updateAllUI();
+  });
+
+  /* =========================
      EXPORT GLOBAL
   ========================= */
 
@@ -179,5 +201,6 @@
   window.getStats = getStats;
   window.saveGameResult = saveGameResult;
   window.updateLevelUI = updateLevelUI;
+  window.updateXPBadge = updateXPBadge;
 
 })();

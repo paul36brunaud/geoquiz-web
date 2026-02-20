@@ -567,3 +567,83 @@ body {
 .light .difficulty-card {
   color: white;
 }
+
+.xp-badge {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  background: linear-gradient(135deg,#00f2fe,#4facfe);
+  color: #000;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  z-index: 999;
+}
+
+.update-popup {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0f172a;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 15px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  z-index: 9999;
+}
+
+.hidden {
+  display: none;
+}
+
+/* =========================
+   UPDATE POPUP
+========================= */
+
+.update-popup {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0f172a;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 15px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  z-index: 9999;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.update-popup button {
+  background: #00f2fe;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* =========================
+   OFFLINE INDICATOR
+========================= */
+
+.offline-indicator {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: #ef4444;
+  color: white;
+  text-align: center;
+  padding: 6px;
+  font-size: 13px;
+  z-index: 9999;
+}
+
+.hidden {
+  display: none;
+}

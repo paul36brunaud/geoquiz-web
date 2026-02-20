@@ -1,11 +1,17 @@
-const CACHE_NAME = "geoquiz-v3";
+const CACHE_NAME = "geoquiz-v5";
+
+/* =========================
+   FICHIERS À PRÉ-CACHER
+========================= */
 
 const FILES_TO_CACHE = [
   "/",
   "/index.html",
-  "/category.html",
+  "/categorie.html",
   "/themes.html",
+  "/difficulty.html",
   "/quiz.html",
+  "/offline.html",
 
   "/css/style.css",
 
@@ -13,6 +19,7 @@ const FILES_TO_CACHE = [
   "/js/navigation.js",
   "/js/theme.js",
   "/js/stats.js",
+  "/js/user.js",
   "/js/home.js",
   "/js/quiz.js",
   "/js/transition.js",
@@ -29,6 +36,7 @@ const FILES_TO_CACHE = [
 ========================= */
 
 self.addEventListener("install", event => {
+
   self.skipWaiting();
 
   event.waitUntil(
@@ -42,6 +50,7 @@ self.addEventListener("install", event => {
 ========================= */
 
 self.addEventListener("activate", event => {
+
   event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
@@ -58,39 +67,85 @@ self.addEventListener("activate", event => {
 });
 
 /* =========================
-   FETCH - CACHE FIRST SAFE
+   FETCH STRATEGY
 ========================= */
 
 self.addEventListener("fetch", event => {
 
   if (event.request.method !== "GET") return;
 
+  const requestURL = new URL(event.request.url);
+
+  /* =========================
+     HTML → Network First
+  ========================= */
+
+  if (
+    requestURL.pathname.endsWith(".html") ||
+    requestURL.pathname === "/"
+  ) {
+
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+
+          const clone = response.clone();
+
+          caches.open(CACHE_NAME)
+            .then(cache => cache.put(event.request, clone));
+
+          return response;
+
+        })
+        .catch(() => {
+          return caches.match(event.request)
+            .then(res => res || caches.match("/offline.html"));
+        })
+    );
+
+    return;
+  }
+
+  /* =========================
+     ASSETS → Cache First
+  ========================= */
+
   event.respondWith(
     caches.match(event.request)
-      .then(cachedResponse => {
+      .then(cached => {
 
-        if (cachedResponse) {
-          return cachedResponse;
-        }
+        if (cached) return cached;
 
         return fetch(event.request)
-          .then(networkResponse => {
+          .then(response => {
 
-            if (!networkResponse || networkResponse.status !== 200) {
-              return networkResponse;
+            if (!response || response.status !== 200) {
+              return response;
             }
 
-            return caches.open(CACHE_NAME).then(cache => {
-              cache.put(event.request, networkResponse.clone());
-              return networkResponse;
-            });
+            const clone = response.clone();
 
+            caches.open(CACHE_NAME)
+              .then(cache => cache.put(event.request, clone));
+
+            return response;
           })
           .catch(() => {
-            // Ici tu pourras ajouter une page offline plus tard
+            // Optionnel : image fallback ici
           });
 
       })
   );
+});
+
+/* =========================
+   UPDATE SILENCIEUSE
+========================= */
+
+self.addEventListener("message", event => {
+
+  if (event.data === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 
 });

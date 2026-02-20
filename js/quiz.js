@@ -1,5 +1,5 @@
 /* =========================
-   QUIZ ENGINE PRO
+   QUIZ ENGINE PREMIUM
 ========================= */
 
 let questions = [];
@@ -22,18 +22,22 @@ const wrongSound = new Audio("assets/sounds/wrong.mp3");
 document.addEventListener("DOMContentLoaded", () => {
 
   const username = localStorage.getItem("username");
-  const category = localStorage.getItem("selectedCategory");
-  const theme = localStorage.getItem("selectedTheme");
+  const selectedMode = localStorage.getItem("selectedMode");
+  const selectedCategory = localStorage.getItem("selectedCategory");
+  const selectedTheme = localStorage.getItem("selectedTheme");
+  const selectedDifficulty = localStorage.getItem("selectedDifficulty") || "easy";
 
   if (
     !username ||
-    !category ||
-    !theme ||
+    !selectedMode ||
+    !selectedCategory ||
+    !selectedTheme ||
     typeof DATABASE === "undefined" ||
-    !DATABASE[category] ||
-    !DATABASE[category][theme]
+    !DATABASE[selectedMode] ||
+    !DATABASE[selectedMode][selectedCategory] ||
+    !DATABASE[selectedMode][selectedCategory][selectedTheme]
   ) {
-    window.location.replace("categorie.html"); // 🔥 corrigé
+    window.location.replace("categorie.html");
     return;
   }
 
@@ -43,9 +47,19 @@ document.addEventListener("DOMContentLoaded", () => {
     updateLevelUI();
   }
 
-  questions = shuffleArray([...DATABASE[category][theme]]);
-  currentIndex = 0;
-  score = 0;
+  /* 🔥 Récupération + filtre difficulté */
+  const allQuestions =
+    DATABASE[selectedMode][selectedCategory][selectedTheme];
+
+  questions = shuffleArray(
+    allQuestions.filter(q => q.difficulty === selectedDifficulty)
+  );
+
+  if (questions.length === 0) {
+    alert("Aucune question pour cette difficulté.");
+    window.location.replace("themes.html");
+    return;
+  }
 
   document.getElementById("totalQuestions").textContent = questions.length;
 
@@ -66,6 +80,7 @@ function loadQuestion() {
   answered = false;
 
   const questionData = questions[currentIndex];
+
   const questionText = document.getElementById("questionText");
   const answersContainer = document.getElementById("answersContainer");
   const questionNumber = document.getElementById("questionNumber");
@@ -75,11 +90,13 @@ function loadQuestion() {
   answersContainer.innerHTML = "";
   questionNumber.textContent = currentIndex + 1;
 
-  /* 🔥 Barre progression */
-  const progressPercent = ((currentIndex) / questions.length) * 100;
-  if (progressFill) progressFill.style.width = progressPercent + "%";
+  const progressPercent =
+    (currentIndex / questions.length) * 100;
 
-  /* 🔀 Mélange réponses */
+  if (progressFill) {
+    progressFill.style.width = progressPercent + "%";
+  }
+
   const shuffledOptions = shuffleArray(
     questionData.options.map((option, index) => ({
       text: option,
@@ -135,24 +152,28 @@ function checkAnswer(selectedIndex) {
     btn.disabled = true;
 
     const optionText = btn.textContent;
-    const originalIndex = questions[currentIndex].options.indexOf(optionText);
+    const originalIndex =
+      questions[currentIndex].options.indexOf(optionText);
 
     if (originalIndex === correctIndex) {
       btn.classList.add("correct");
     }
 
-    if (originalIndex === selectedIndex && selectedIndex !== correctIndex) {
+    if (
+      originalIndex === selectedIndex &&
+      selectedIndex !== correctIndex
+    ) {
       btn.classList.add("wrong");
     }
   });
 
-  /* 🎯 SCORE + BONUS TEMPS */
+  /* 🎯 SCORE */
   if (selectedIndex === correctIndex) {
 
     score++;
 
     const timeBonus = Math.max(0, timeLeft);
-    score += timeBonus * 0.1; // bonus léger rapidité
+    score += timeBonus * 0.1;
 
     correctSound.currentTime = 0;
     correctSound.play();
@@ -164,15 +185,11 @@ function checkAnswer(selectedIndex) {
     wrongSound.currentTime = 0;
     wrongSound.play();
 
-    if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+    if (navigator.vibrate) navigator.vibrate([200,100,200]);
   }
 
   setTimeout(nextQuestion, 1200);
 }
-
-/* =========================
-   QUESTION SUIVANTE
-========================= */
 
 function nextQuestion() {
   currentIndex++;
@@ -188,14 +205,16 @@ function endQuiz() {
   const main = document.querySelector("main");
 
   const finalScore = Math.round(score);
-  const percentage = Math.round((finalScore / questions.length) * 100);
+  const percentage =
+    Math.round((finalScore / questions.length) * 100);
 
-  const theme = localStorage.getItem("selectedTheme");
+  const difficulty =
+    localStorage.getItem("selectedDifficulty") || "easy";
 
   /* 🔥 XP selon difficulté */
   let xpMultiplier = 20;
-  if (theme === "moyen") xpMultiplier = 30;
-  if (theme === "difficile") xpMultiplier = 40;
+  if (difficulty === "normal") xpMultiplier = 30;
+  if (difficulty === "hard") xpMultiplier = 50;
 
   const earnedXP = finalScore * xpMultiplier;
 
@@ -207,12 +226,12 @@ function endQuiz() {
     mention = "🏆 Excellent !";
     stars = "⭐⭐⭐";
     badge = "gold-badge";
-  } 
+  }
   else if (percentage >= 60) {
     mention = "🥈 Bien joué !";
     stars = "⭐⭐";
     badge = "silver-badge";
-  } 
+  }
   else {
     mention = "🥉 À améliorer";
     stars = "⭐";
@@ -235,7 +254,8 @@ function endQuiz() {
       <p>${percentage}%</p>
       <h3 class="${badge}">${mention}</h3>
       <p>+ ${earnedXP} XP gagnés</p>
-      <button class="main-btn" onclick="window.location.href='categorie.html'">
+      <button class="main-btn"
+        onclick="window.location.href='categorie.html'">
         Revenir aux catégories
       </button>
     </div>
@@ -253,9 +273,3 @@ function shuffleArray(array) {
   }
   return array;
 }
-
-const difficulty = localStorage.getItem("selectedDifficulty") || "easy";
-
-let questions = DATABASE[selectedMode][selectedCategory][selectedTheme];
-
-questions = questions.filter(q => q.difficulty === difficulty);
