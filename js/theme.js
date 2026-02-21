@@ -1,5 +1,5 @@
 /* ===============================
-   THEME SYSTEM PRO
+   THEME SYSTEM CLEAN
 ================================= */
 
 (function(){
@@ -18,34 +18,34 @@
   }
 
   function getSavedMode(){
-    return localStorage.getItem(STORAGE_KEY) || getSystemPreference() || DEFAULT_MODE;
+    return localStorage.getItem(STORAGE_KEY) 
+      || getSystemPreference() 
+      || DEFAULT_MODE;
   }
 
   /* =========================
      APPLIQUER THÈME
   ========================= */
 
-  function applyTheme(mode, updateSwitch = false){
+  function applyTheme(mode, updateUI = false){
 
     const isLight = mode === "light";
-    const newValue = isLight ? "light" : "dark";
+    const finalMode = isLight ? "light" : "dark";
 
     document.documentElement.classList.toggle("light", isLight);
 
-    if(localStorage.getItem(STORAGE_KEY) !== newValue){
-      localStorage.setItem(STORAGE_KEY, newValue);
-    }
+    localStorage.setItem(STORAGE_KEY, finalMode);
 
-    if(updateSwitch){
-      const switchBtn = document.getElementById("themeSwitch");
-      if(switchBtn){
-        switchBtn.checked = isLight;
+    if(updateUI){
+      const switchInput = document.getElementById("themeSwitch");
+      if(switchInput){
+        switchInput.checked = isLight;
       }
     }
   }
 
   /* =========================
-     ANTI FLASH (AVANT DOM)
+     ANTI FLASH (avant DOM)
   ========================= */
 
   applyTheme(getSavedMode());
@@ -56,18 +56,29 @@
 
   document.addEventListener("DOMContentLoaded", () => {
 
-    const switchBtn = document.getElementById("themeSwitch");
+    const switchInput = document.getElementById("themeSwitch");
+    const toggleBtn = document.getElementById("themeToggle");
 
+    /* Sync état UI */
     applyTheme(getSavedMode(), true);
 
-    if(switchBtn){
-      switchBtn.addEventListener("change", () => {
-        applyTheme(switchBtn.checked ? "light" : "dark");
+    /* Checkbox switch */
+    if(switchInput){
+      switchInput.addEventListener("change", () => {
+        applyTheme(switchInput.checked ? "light" : "dark", true);
+      });
+    }
+
+    /* Bouton simple */
+    if(toggleBtn){
+      toggleBtn.addEventListener("click", () => {
+        const current = getSavedMode();
+        const newMode = current === "dark" ? "light" : "dark";
+        applyTheme(newMode, true);
       });
     }
 
     /* Sync multi-onglets */
-
     window.addEventListener("storage", (e) => {
       if(e.key === STORAGE_KEY){
         applyTheme(e.newValue, true);
@@ -83,15 +94,3 @@
   window.applyTheme = applyTheme;
 
 })();
-
-document.addEventListener("DOMContentLoaded", () => {
-  const toggle = document.getElementById("themeToggle");
-
-  if(toggle){
-    toggle.addEventListener("click", () => {
-      const current = localStorage.getItem("mode") || "dark";
-      const newMode = current === "dark" ? "light" : "dark";
-      applyTheme(newMode, true);
-    });
-  }
-});

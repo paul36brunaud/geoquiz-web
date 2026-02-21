@@ -16,7 +16,7 @@
   <!-- PWA -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#00f2fe">
-  <link rel="apple-touch-icon" href="icons/icon.png">
+  <link rel="apple-touch-icon" href="/icons/icon.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
@@ -45,7 +45,7 @@
 
   <!-- TITRE CENTRÉ -->
   <h1 class="logo centered-title">
-    <img src="/icons/icon.png" alt="Géo-Quiz" class="title-icon">
+    <img src="/icons/icon.png" alt="Logo Géo-Quiz" class="title-icon">
     Géo-Quiz & Histo-Quiz
   </h1>
 
@@ -135,14 +135,14 @@
 <script src="js/transition.js" defer></script>
 <script src="js/navigation.js" defer></script>
 
-<!-- SERVICE WORKER + FEATURES PREMIUM -->
+<!-- SERVICE WORKER + FEATURES -->
 <script>
 
 if ("serviceWorker" in navigator) {
 
   window.addEventListener("load", () => {
 
-    navigator.serviceWorker.register("service-worker.js")
+    navigator.serviceWorker.register("/service-worker.js")
       .then(reg => {
 
         reg.onupdatefound = () => {
@@ -168,7 +168,7 @@ if ("serviceWorker" in navigator) {
   });
 }
 
-/* UPDATE SILENCIEUSE */
+/* UPDATE */
 function updateApp(){
 
   navigator.serviceWorker.getRegistration().then(reg => {
@@ -181,7 +181,7 @@ function updateApp(){
   });
 }
 
-/* INDICATEUR ONLINE / OFFLINE */
+/* ONLINE / OFFLINE */
 function updateOnlineStatus(){
 
   const indicator = document.getElementById("offlineIndicator");

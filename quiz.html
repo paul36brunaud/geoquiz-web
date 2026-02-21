@@ -4,12 +4,13 @@
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GeoQuiz | Partie</title>
+  <title>Géo-Quiz | Partie</title>
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#00f2fe">
 
+  <!-- CSS -->
   <link rel="stylesheet" href="css/style.css">
 
   <!-- Google Fonts -->
@@ -23,13 +24,13 @@
 
   <div></div>
 
-  <!-- 🔥 Titre dynamique -->
   <h1 class="logo centered-title">
-    <img src="icons/icon.png" alt="Géo-Quiz" class="title-icon">
+    <img src="/icons/icon.png" alt="Logo Géo-Quiz" class="title-icon">
     Géo-Quiz & Histo-Quiz
   </h1>
 
   <div class="player-info">
+
     👤 <span id="usernameDisplay">Invité</span>
 
     <div class="level-info">
@@ -109,36 +110,42 @@
         SCRIPTS
 ========================= -->
 
-<script src="js/database.js"></script>
-<script src="js/stats.js"></script>
-<script src="js/theme.js"></script>
-<script src="js/navigation.js"></script>
-<script src="js/timer.js"></script>
-<script src="js/quiz.js"></script>
+<script src="js/database.js" defer></script>
+<script src="js/stats.js" defer></script>
+<script src="js/theme.js" defer></script>
+<script src="js/navigation.js" defer></script>
+<script src="js/timer.js" defer></script>
+<script src="js/quiz.js" defer></script>
 
 <script>
-
-/* 🔥 Adapter titre selon mode */
 document.addEventListener("DOMContentLoaded", () => {
 
-  const mode = localStorage.getItem("selectedMode");
-  const title = document.getElementById("quizTitle");
+  const username = localStorage.getItem("username");
+  const selectedCategory = localStorage.getItem("selectedCategory");
+  const selectedTheme = localStorage.getItem("selectedTheme");
 
-  if (mode === "geo") {
-    title.textContent = "🌍 Géo-Quiz";
-  } else if (mode === "histo") {
-    title.textContent = "📜 Histo-Quiz";
+  // 🔐 Protection accès direct
+  if (!username || !selectedCategory || !selectedTheme) {
+    window.location.replace("index.html");
+    return;
+  }
+
+  document.getElementById("usernameDisplay").textContent = username;
+
+  if (typeof updateLevelUI === "function") {
+    updateLevelUI();
   }
 
 });
-
 </script>
 
 <!-- SERVICE WORKER -->
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("service-worker.js").catch(()=>{});
+    navigator.serviceWorker
+      .register("/service-worker.js")
+      .catch(()=>{});
   });
 }
 </script>

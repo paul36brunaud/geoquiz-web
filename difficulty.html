@@ -1,28 +1,108 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Géo-Quiz - Difficulté</title>
-<link rel="stylesheet" href="css/style.css">
-</head>
-<body class="centered">
 
-<h2>Choisissez votre difficulté</h2>s
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Géo-Quiz | Difficulté</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#00f2fe">
+
+<!-- CSS -->
+<link rel="stylesheet" href="css/style.css">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<header class="main-header">
+
+  <div class="header-left">
+    <button onclick="goBack()" class="back-btn">⬅ Retour</button>
+  </div>
+
+  <h1 class="logo centered-title">
+    <img src="/icons/icon.png" alt="Logo Géo-Quiz" class="title-icon">
+    Géo-Quiz & Histo-Quiz
+  </h1>
+
+  <div class="header-right">
+    <div class="player-info">
+      👤 <span id="usernameDisplay">Invité</span>
+
+      <div class="level-info">
+        ⭐ Niveau <span id="level">1</span>
+        <div class="xp-bar">
+          <div id="xpFill"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+
+<main class="centered">
+
+<h2>Choisissez votre difficulté</h2>
 
 <div class="difficulty-grid">
-  <div class="difficulty-card easy" onclick="chooseDifficulty('easy')">
+  <div class="difficulty-card easy" data-diff="easy">
     😊 Facile
   </div>
 
-  <div class="difficulty-card normal" onclick="chooseDifficulty('normal')">
+  <div class="difficulty-card normal" data-diff="normal">
     😎 Normal
   </div>
 
-  <div class="difficulty-card hard" onclick="chooseDifficulty('hard')">
+  <div class="difficulty-card hard" data-diff="hard">
     🔥 Difficile
   </div>
 </div>
 
-<script src="js/navigation.js"></script>
+</main>
+
+<!-- SCRIPTS -->
+<script src="js/stats.js" defer></script>
+<script src="js/user.js" defer></script>
+<script src="js/navigation.js" defer></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const username = localStorage.getItem("username");
+  const selectedCategory = localStorage.getItem("selectedCategory");
+
+  // 🔐 Protection
+  if (!username || !selectedCategory) {
+    window.location.replace("index.html");
+    return;
+  }
+
+  document.getElementById("usernameDisplay").textContent = username;
+
+  if (typeof updateLevelUI === "function") {
+    updateLevelUI();
+  }
+
+  document.querySelectorAll(".difficulty-card").forEach(card => {
+    card.addEventListener("click", () => {
+      const diff = card.dataset.diff;
+      localStorage.setItem("selectedTheme", diff);
+      window.location.href = "quiz.html";
+    });
+  });
+
+});
+
+function goBack() {
+  window.location.href = "category.html";
+}
+</script>
+
 </body>
 </html>

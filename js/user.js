@@ -1,5 +1,5 @@
 /* =========================
-   USER MANAGEMENT PRO
+   USER MANAGEMENT CLEAN
 ========================= */
 
 (function(){
@@ -57,7 +57,6 @@
     const input = document.getElementById("usernameInput");
 
     /* Update XP UI */
-
     if(typeof updateLevelUI === "function"){
       updateLevelUI();
     }
@@ -81,7 +80,7 @@
       const name = input.value.trim();
 
       if(name.length < 3){
-        alert("⚠ Le pseudo doit contenir au moins 3 caractères.");
+        alert("Le pseudo doit contenir au moins 3 caractères.");
         return;
       }
 
@@ -134,11 +133,7 @@
         localStorage.removeItem("selectedCategory");
         localStorage.removeItem("selectedTheme");
 
-        if(typeof navigate === "function"){
-          navigate("categorie.html"); // ✅ corrigé
-        }else{
-          window.location.href = "categorie.html";
-        }
+        window.location.href = "category.html";
 
       });
     }

@@ -385,3 +385,33 @@ input[type="text"]{
 .title-icon:hover {
   transform: rotate(10deg) scale(1.1);
 }
+
+.theme-card {
+  padding: 20px;
+  font-size: 1.1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+  border: none;
+}
+
+.theme-card:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.theme-card:disabled {
+  cursor: not-allowed;
+}
+
+.theme-card.easy {
+  background: #2ecc71;
+}
+
+.theme-card.medium {
+  background: #f39c12;
+}
+
+.theme-card.hard {
+  background: #e74c3c;
+}

@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const selectedCategory = localStorage.getItem("selectedCategory");
   const selectedMode = localStorage.getItem("selectedMode");
 
-  if (!username || !selectedCategory) {
+  if (!username || !selectedCategory || !selectedMode) {
     window.location.replace("index.html");
     return;
   }
@@ -98,57 +98,58 @@ document.addEventListener("DOMContentLoaded", () => {
     updateLevelUI();
   }
 
-  /* 🔥 Adapter titre Géo / Histo */
-  const modeTitle = document.getElementById("modeTitle");
-
-  if (selectedMode === "geo") {
-    modeTitle.textContent = "🌍 Géo-Quiz";
-  } else if (selectedMode === "histo") {
-    modeTitle.textContent = "📜 Histo-Quiz";
-  }
-
-  loadThemes(selectedCategory);
+  loadDifficulties(selectedMode, selectedCategory);
 });
 
 
 /* =========================
-   CHARGER THEMES
+   CHARGER DIFFICULTÉS
 ========================= */
 
-function loadThemes(category) {
+function loadDifficulties(mode, category) {
 
   const themeList = document.getElementById("themeList");
   themeList.innerHTML = "";
 
-  if (typeof DATABASE === "undefined" || !DATABASE[category]) {
-    themeList.innerHTML = "<p>Aucun thème disponible.</p>";
+  if (
+    typeof DATABASE === "undefined" ||
+    !DATABASE[mode] ||
+    !DATABASE[mode][category]
+  ) {
+    themeList.innerHTML = "<p>Aucune question disponible.</p>";
     return;
   }
 
-  const themes = Object.keys(DATABASE[category]);
+  const allQuestions = DATABASE[mode][category];
 
-  themes.forEach(theme => {
+  const difficulties = [
+    { label: "Facile", value: "easy" },
+    { label: "Moyen", value: "medium" },
+    { label: "Difficile", value: "hard" }
+  ];
+
+  difficulties.forEach(diff => {
+
+    const questionsForDiff =
+      allQuestions.filter(q => q.difficulty === diff.value);
 
     const btn = document.createElement("button");
     btn.className = "theme-card";
-    btn.textContent = formatThemeName(theme);
+
+    btn.textContent = diff.label + " (" + questionsForDiff.length + ")";
+
+    if (questionsForDiff.length === 0) {
+      btn.disabled = true;
+      btn.style.opacity = "0.5";
+    }
 
     btn.addEventListener("click", () => {
-      localStorage.setItem("selectedTheme", theme);
+      localStorage.setItem("selectedTheme", diff.value);
       window.location.href = "quiz.html";
     });
 
     themeList.appendChild(btn);
   });
-}
-
-
-/* =========================
-   FORMAT NOM THEME
-========================= */
-
-function formatThemeName(name) {
-  return name.charAt(0).toUpperCase() + name.slice(1);
 }
 
 </script>

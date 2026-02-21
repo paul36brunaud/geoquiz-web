@@ -1,5 +1,5 @@
 /* =========================
-   XP & LEVEL SYSTEM PREMIUM
+   XP & LEVEL SYSTEM CLEAN
 ========================= */
 
 (function(){
@@ -12,7 +12,7 @@
   ========================= */
 
   function safeNumber(value){
-    const n = parseInt(value);
+    const n = parseInt(value, 10);
     return isNaN(n) ? 0 : n;
   }
 
@@ -34,7 +34,8 @@
   }
 
   function getXPPercent(){
-    return (getXPProgress() / XP_PER_LEVEL) * 100;
+    const percent = (getXPProgress() / XP_PER_LEVEL) * 100;
+    return Math.min(100, Math.max(0, percent));
   }
 
   /* =========================
@@ -45,12 +46,12 @@
 
     const level = getLevel();
 
-    if(level >= 30) return { name: "💎 Diamant", color: "#00e0ff" };
-    if(level >= 20) return { name: "🥇 Or", color: "#ffd700" };
-    if(level >= 10) return { name: "🥈 Argent", color: "#c0c0c0" };
-    if(level >= 5)  return { name: "🥉 Bronze", color: "#cd7f32" };
+    if(level >= 30) return { name: "Diamant", color: "#00e0ff" };
+    if(level >= 20) return { name: "Or", color: "#ffd700" };
+    if(level >= 10) return { name: "Argent", color: "#c0c0c0" };
+    if(level >= 5)  return { name: "Bronze", color: "#cd7f32" };
 
-    return { name: "🎓 Débutant", color: "#ffffff" };
+    return { name: "Débutant", color: "#ffffff" };
   }
 
   /* =========================
@@ -131,7 +132,7 @@
     const rankElement = document.getElementById("rank");
 
     if(levelElement){
-      levelElement.innerText = getLevel();
+      levelElement.textContent = getLevel();
     }
 
     if(xpFill){
@@ -163,7 +164,7 @@
      LEVEL UP ANIMATION
   ========================= */
 
-  function levelUpAnimation(level){
+  function levelUpAnimation(){
 
     const levelElement = document.getElementById("level");
     if(!levelElement) return;

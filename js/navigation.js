@@ -1,5 +1,5 @@
 /* =========================
-   NAVIGATION SYSTEM PRO
+   NAVIGATION SYSTEM CLEAN
 ========================= */
 
 (function(){
@@ -20,11 +20,7 @@
       return;
     }
 
-    if(typeof navigate === "function"){
-      navigate(page);
-    }else{
-      window.location.href = page;
-    }
+    window.location.href = page;
   }
 
   /* =========================
@@ -32,39 +28,33 @@
   ========================= */
 
   function goToCategory(){
-    safeRedirect("categorie.html"); // ✅ corrigé
+    safeRedirect("category.html");
   }
 
   function chooseMode(mode){
 
-    if(typeof mode !== "string" || mode.trim() === ""){
-      return;
-    }
+    if(!mode) return;
 
     localStorage.setItem(STORAGE.MODE, mode);
     localStorage.removeItem(STORAGE.CATEGORY);
     localStorage.removeItem(STORAGE.THEME);
 
-    safeRedirect("categorie.html");
+    safeRedirect("category.html");
   }
 
   function chooseCategory(category){
 
-    if(typeof category !== "string" || category.trim() === ""){
-      return;
-    }
+    if(!category) return;
 
     localStorage.setItem(STORAGE.CATEGORY, category);
     localStorage.removeItem(STORAGE.THEME);
 
-    safeRedirect("themes.html");
+    safeRedirect("difficulty.html");
   }
 
   function chooseTheme(theme){
 
-    if(typeof theme !== "string" || theme.trim() === ""){
-      return;
-    }
+    if(!theme) return;
 
     localStorage.setItem(STORAGE.THEME, theme);
 
@@ -81,14 +71,3 @@
   window.chooseTheme = chooseTheme;
 
 })();
-
-function chooseDifficulty(level){
-
-  if(!level) return;
-
-  localStorage.setItem("selectedDifficulty", level);
-
-  safeRedirect("quiz.html");
-}
-
-window.chooseDifficulty = chooseDifficulty;

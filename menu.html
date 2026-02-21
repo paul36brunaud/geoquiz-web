@@ -4,7 +4,7 @@
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Géo-Quiz | Accueil</title>
+  <title>Géo-Quiz | Menu</title>
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json">
@@ -25,10 +25,10 @@
   <div class="header-left"></div>
 
   <!-- TITRE CENTRÉ -->
-    <h1 class="logo centered-title">
-    <img src="icons/icon.png" alt="Géo-Quiz" class="title-icon">
-      Géo-Quiz & Histo-Quiz
-    </h1>
+  <h1 class="logo centered-title">
+    <img src="/icons/icon.png" alt="Logo Géo-Quiz" class="title-icon">
+    Géo-Quiz & Histo-Quiz
+  </h1>
 
   <div class="header-right">
 
@@ -60,7 +60,7 @@
 <main class="centered landing">
 
   <h2 class="welcome-title">
-    Bienvenue sur <span class="gradient-text">GeoQuiz App</span>
+    Bienvenue sur <span class="gradient-text">Géo-Quiz</span>
   </h2>
 
   <p class="subtitle">
@@ -74,6 +74,7 @@
       id="usernameInput" 
       placeholder="Entrez votre pseudo"
       maxlength="15"
+      autocomplete="off"
     >
     <button id="saveBtn" class="main-btn">
       Valider
@@ -81,7 +82,7 @@
   </div>
 
   <!-- BOUTON START -->
-  <button id="startBtn" class="main-btn big-btn" style="display:none;">
+  <button id="startBtn" class="main-btn big-btn hidden">
     🚀 Commencer l'aventure
   </button>
 
@@ -91,17 +92,17 @@
          SCRIPTS
 ========================= -->
 
-<script src="js/stats.js"></script>
-<script src="js/user.js"></script>
-<script src="js/theme.js"></script>
-<script src="js/transition.js"></script>
-<script src="js/navigation.js"></script>
+<script src="js/stats.js" defer></script>
+<script src="js/user.js" defer></script>
+<script src="js/theme.js" defer></script>
+<script src="js/transition.js" defer></script>
+<script src="js/navigation.js" defer></script>
 
 <!-- SERVICE WORKER -->
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("service-worker.js")
+    navigator.serviceWorker.register("/service-worker.js")
       .catch(() => {});
   });
 }

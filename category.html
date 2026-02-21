@@ -1,109 +1,70 @@
-<script>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
 
-document.addEventListener("DOMContentLoaded", () => {
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Géo-Quiz | Catégories</title>
 
-  const username = localStorage.getItem("username");
-  const selectedMode = localStorage.getItem("selectedMode");
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#00f2fe">
 
-  /* 🔐 Protection */
-  if (!username || !selectedMode) {
-    window.location.replace("index.html");
-    return;
-  }
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
 
-  /* 👤 Affichage joueur */
-  document.getElementById("usernameDisplay").textContent = username;
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-  if (typeof updateLevelUI === "function") {
-    updateLevelUI();
-  }
+</head>
 
-  loadCategories(selectedMode);
+<body>
 
-});
+<header class="main-header">
 
+  <div class="header-left">
+    <button onclick="goBack()" class="back-btn">⬅ Retour</button>
+  </div>
 
-/* =========================
-   📂 CHARGEMENT CATÉGORIES
-========================= */
-function loadCategories(mode) {
+  <h1 class="logo centered-title">
+    <img src="/icons/icon.png" alt="Logo Géo-Quiz" class="title-icon">
+    Géo-Quiz & Histo-Quiz
+  </h1>
 
-  const grid = document.getElementById("categoryGrid");
-  const title = document.getElementById("categoryTitle");
+  <div class="header-right">
+    <div class="player-info">
+      👤 <span id="usernameDisplay">Invité</span>
 
-  let categories = [];
+      <div class="level-info">
+        ⭐ Niveau <span id="level">1</span>
 
-  if (mode === "geo") {
-
-    title.textContent = "🌍 Catégories Géo-Quiz";
-
-    categories = [
-      { name: "Capitales du monde", type: "capitales" },
-      { name: "Pays & Drapeaux", type: "drapeaux" },
-      { name: "Continents", type: "continents" },
-      { name: "Mers & Océans", type: "mers" },
-      { name: "Relief & Montagnes", type: "relief" }
-    ];
-
-  } else if (mode === "histo") {
-
-    title.textContent = "📜 Catégories Histo-Quiz";
-
-    categories = [
-      { name: "Antiquité", type: "antiquite" },
-      { name: "Moyen Âge", type: "moyen_age" },
-      { name: "Révolution Française", type: "revolution" },
-      { name: "Guerres Mondiales", type: "guerres" },
-      { name: "Civilisations", type: "civilisations" }
-    ];
-  }
-
-  grid.innerHTML = "";
-
-  categories.forEach(cat => {
-    const card = document.createElement("div");
-    card.className = "category-card";
-    card.innerHTML = `<h3>${cat.name}</h3>`;
-    card.addEventListener("click", () => selectCategory(cat.type));
-    grid.appendChild(card);
-  });
-}
-
-
-/* =========================
-   🎮 SÉLECTION CATÉGORIE
-========================= */
-function selectCategory(category) {
-
-  localStorage.setItem("selectedCategory", category);
-
-  const container = document.getElementById("themesContainer");
-
-  container.innerHTML = `
-    <h3>Choisis une difficulté</h3>
-    <div class="theme-grid">
-      <button class="main-btn" onclick="startQuiz('facile')">Facile</button>
-      <button class="main-btn" onclick="startQuiz('moyen')">Moyen</button>
-      <button class="main-btn" onclick="startQuiz('difficile')">Difficile</button>
+        <div class="xp-bar">
+          <div id="xpFill"></div>
+        </div>
+      </div>
     </div>
-  `;
-}
+  </div>
 
+</header>
 
-/* =========================
-   🚀 DÉMARRER QUIZ
-========================= */
-function startQuiz(theme) {
-  localStorage.setItem("selectedTheme", theme);
-  window.location.href = "quiz.html";
-}
+<main class="centered">
 
+  <h2 id="categoryTitle">Catégories</h2>
 
-/* =========================
-   ⬅ RETOUR
-========================= */
-function goBack() {
-  window.location.href = "menu.html";
-}
+  <div id="categoryGrid" class="category-grid"></div>
 
-</script>
+  <div id="themesContainer" class="themes-container"></div>
+
+</main>
+
+<!-- =========================
+         SCRIPTS
+========================= -->
+
+<script src="js/stats.js" defer></script>
+<script src="js/user.js" defer></script>
+<script src="js/navigation.js" defer></script>
+<script src="js/category.js" defer></script>
+
+</body>
+</html>

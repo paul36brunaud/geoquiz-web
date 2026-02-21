@@ -1,5 +1,5 @@
 /* =========================
-   QUIZ ENGINE PREMIUM (NO SOUND)
+   QUIZ ENGINE CLEAN
 ========================= */
 
 let questions = [];
@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const selectedMode = localStorage.getItem("selectedMode");
   const selectedCategory = localStorage.getItem("selectedCategory");
   const selectedTheme = localStorage.getItem("selectedTheme");
-  const selectedDifficulty = localStorage.getItem("selectedDifficulty") || "easy";
 
   if (
     !username ||
@@ -30,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     !DATABASE[selectedMode][selectedCategory] ||
     !DATABASE[selectedMode][selectedCategory][selectedTheme]
   ) {
-    window.location.replace("categorie.html");
+    window.location.replace("category.html");
     return;
   }
 
@@ -40,16 +39,14 @@ document.addEventListener("DOMContentLoaded", () => {
     updateLevelUI();
   }
 
-  const allQuestions =
-    DATABASE[selectedMode][selectedCategory][selectedTheme];
-
-  questions = shuffleArray(
-    allQuestions.filter(q => q.difficulty === selectedDifficulty)
-  );
+  questions =
+    shuffleArray(
+      [...DATABASE[selectedMode][selectedCategory][selectedTheme]]
+    );
 
   if (questions.length === 0) {
-    alert("Aucune question pour cette difficulté.");
-    window.location.replace("themes.html");
+    alert("Aucune question disponible.");
+    window.location.replace("category.html");
     return;
   }
 
@@ -83,7 +80,7 @@ function loadQuestion() {
   questionNumber.textContent = currentIndex + 1;
 
   const progressPercent =
-    (currentIndex / questions.length) * 100;
+    ((currentIndex + 1) / questions.length) * 100;
 
   if (progressFill) {
     progressFill.style.width = progressPercent + "%";
@@ -159,7 +156,8 @@ function checkAnswer(selectedIndex) {
     }
   });
 
-  /* 🎯 SCORE */
+  /* SCORE */
+
   if (selectedIndex === correctIndex) {
 
     score++;
@@ -194,13 +192,13 @@ function endQuiz() {
   const percentage =
     Math.round((finalScore / questions.length) * 100);
 
-  const difficulty =
-    localStorage.getItem("selectedDifficulty") || "easy";
+  /* XP basé sur difficulté (selectedTheme) */
 
-  /* XP selon difficulté */
+  const theme = localStorage.getItem("selectedTheme");
+
   let xpMultiplier = 20;
-  if (difficulty === "normal") xpMultiplier = 30;
-  if (difficulty === "hard") xpMultiplier = 50;
+  if (theme === "moyen") xpMultiplier = 30;
+  if (theme === "difficile") xpMultiplier = 50;
 
   const earnedXP = finalScore * xpMultiplier;
 
@@ -209,17 +207,17 @@ function endQuiz() {
   let badge = "";
 
   if (percentage >= 90) {
-    mention = "🏆 Excellent !";
+    mention = "Excellent";
     stars = "⭐⭐⭐";
     badge = "gold-badge";
   }
   else if (percentage >= 60) {
-    mention = "🥈 Bien joué !";
+    mention = "Bien joué";
     stars = "⭐⭐";
     badge = "silver-badge";
   }
   else {
-    mention = "🥉 À améliorer";
+    mention = "À améliorer";
     stars = "⭐";
     badge = "bronze-badge";
   }
@@ -234,14 +232,14 @@ function endQuiz() {
 
   main.innerHTML = `
     <div class="result-screen fade-in">
-      <h2>Quiz terminé 🎉</h2>
+      <h2>Quiz terminé</h2>
       <div class="stars">${stars}</div>
       <p>Score : ${finalScore} / ${questions.length}</p>
       <p>${percentage}%</p>
       <h3 class="${badge}">${mention}</h3>
       <p>+ ${earnedXP} XP gagnés</p>
       <button class="main-btn"
-        onclick="window.location.href='categorie.html'">
+        onclick="window.location.href='category.html'">
         Revenir aux catégories
       </button>
     </div>
