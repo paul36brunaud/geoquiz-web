@@ -6,28 +6,23 @@
   "lang": "fr",
   "dir": "ltr",
 
-  "start_url": "./index.html",
-  "scope": "./",
+  "start_url": "index.html",
+  "scope": "/",
 
   "display": "standalone",
-  "orientation": "portrait-primary",
+  "orientation": "portrait",
 
   "background_color": "#0f172a",
   "theme_color": "#00f2fe",
 
   "categories": ["education", "games"],
-  "prefer_related_applications": false,
 
   "icons": [
     {
-      "src": "icons/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icons/icon-512.png",
+      "src": "icons/icon.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }

@@ -1,4 +1,4 @@
-const CACHE_NAME = "geoquiz-v6";
+const CACHE_NAME = "geoquiz-v7";
 
 /* =========================
    FICHIERS À PRÉ-CACHER
@@ -27,8 +27,7 @@ const FILES_TO_CACHE = [
 
   "/manifest.json",
 
-  "/icons/icon-192.png",
-  "/icons/icon-512.png"
+  "/icons/icon.png"   // ✅ UNE SEULE ICÔNE
 ];
 
 /* =========================
@@ -42,9 +41,6 @@ self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(FILES_TO_CACHE))
-      .catch(() => {
-        // évite que l'installation échoue si un fichier manque
-      })
   );
 });
 
@@ -92,10 +88,6 @@ self.addEventListener("fetch", event => {
       fetch(event.request)
         .then(response => {
 
-          if (!response || !response.ok) {
-            throw new Error("Network error");
-          }
-
           const clone = response.clone();
           caches.open(CACHE_NAME)
             .then(cache => cache.put(event.request, clone));
@@ -124,19 +116,12 @@ self.addEventListener("fetch", event => {
         return fetch(event.request)
           .then(response => {
 
-            if (!response || !response.ok) {
-              throw new Error("Network error");
-            }
-
             const clone = response.clone();
 
             caches.open(CACHE_NAME)
               .then(cache => cache.put(event.request, clone));
 
             return response;
-          })
-          .catch(() => {
-            // optionnel : image par défaut ici
           });
 
       })
